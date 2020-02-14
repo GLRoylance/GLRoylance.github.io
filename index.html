@@ -1,1 +1,501 @@
-"Hello World" 
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Free Web tutorials">
+    <meta name="keywords" content="First Robotics,FRC,FRC 2020,Infinite Recharge,power cell,shooter,generator switch,switch,level,rung">
+    <meta name="author" content="Gerald Roylance">
+    <title>FRC Calculators</title>
+</head>
+<body>
+
+    <h2>Calculator</h2>
+    <p>
+        Quick and dirty calculator for ideal parabolic trajectories.
+    </p>
+    <svg height="300" viewBox="-10 -10 420 220"
+         xmlns="http://www.w3c.org/2000/svg"
+         xmlns:xlink="http://www.w3c.org/1999/xlink">
+
+        <defs>
+            <g id="powercell">
+                <circle r="2.91667" fill="yellow" stroke="black" stroke-width="0.5"></circle>
+            </g>
+            <g id="robot1">
+                <rect y="180.0" width="20.0" height="18.0" fill="lightblue" stroke="black" stroke-width="0.5"></rect>
+
+                <rect x="-2.0" y="195.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+                <rect x="20.0" y="195.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+
+                <circle cx="5" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+                <circle cx="15" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+            </g>
+            <g id="robotD">
+                <rect y="160.0" width="20.0" height="38.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+                <rect x="-10" y="160.0" width="10" height="5.0" fill="red" stroke="black" stroke-width="1.0">
+                    <title>Linebacker</title>
+                </rect>
+
+                <rect x="-2.0" y="195.0" width="2.0" height="3.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+                <rect x="20.0" y="195.0" width="2.0" height="3.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+
+                <circle cx="5" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+                <circle cx="15" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+            </g>
+        </defs>
+
+        <rect x="-10" y="-10" width="420" height="220" fill="pink"></rect>
+
+        <g stroke="gray" stroke-width="1">
+            <title>Grid</title>
+            <line x1="-10" x2="410" y1="0" y2="0"></line>
+            <line x1="-10" x2="410" y1="50" y2="50"></line>
+            <line x1="-10" x2="410" y1="100" y2="100"></line>
+            <line x1="-10" x2="410" y1="150" y2="150"></line>
+            <line x1="-10" x2="410" y1="205" y2="205" stroke-width="10"></line>
+
+            <line x1="0" x2="0" y1="-10" y2="200"></line>
+            <line x1="50" x2="50" y1="-10" y2="200"></line>
+            <line x1="100" x2="100" y1="-10" y2="200"></line>
+            <line x1="150" x2="150" y1="-10" y2="200"></line>
+            <line x1="200" x2="200" y1="-10" y2="200"></line>
+            <line x1="250" x2="250" y1="-10" y2="200"></line>
+            <line x1="300" x2="300" y1="-10" y2="200"></line>
+            <line x1="350" x2="350" y1="-10" y2="200"></line>
+            <line x1="400" x2="400" y1="-10" y2="200"></line>
+
+            <line x1="-10" x2="410" y1="160" y2="160" stroke="gray" stroke-dasharray="5 5"></line>
+            <line x1="-10" x2="410" y1="180" y2="180" stroke="gray" stroke-dasharray="5 5"></line>
+        </g>
+
+        <g transform="translate(300,200)">
+            <title>Power Port</title>
+            <desc>The goal is centered at 8&prime; 2.25&Prime; = 8.1875 feet &plusmn; 1.25. The Power Port is 10&prime; 2.25&Prime; tall.</desc>
+            <line x1="0" y1="0" x2="0" y2="-69.375" stroke="black" stroke-width="3"></line>
+            <line x1="0" y1="-94.375" x2="0" y2="-101.875" stroke="black" stroke-width="3"></line>
+
+            <line x1="24.375" y1="0" x2="24.375" y2="-76.45833" stroke="black" stroke-width="3"></line>
+            <line x1="24.375" y1="-87.29167" x2="24.375" y2="-101.875" stroke="black" stroke-width="3"></line>
+        </g>
+
+        <use id="robot972" xlink:href="#robot1" x="100" y="0">
+            <title>Offensive Robot</title>
+        </use>
+        <use id="robot254" xlink:href="#robotD" x="100" y="0">
+            <title>Defensive Robot</title>
+        </use>
+
+        <g>
+            <title>Power Cell trajectory</title>
+            <path id="pathTrajectory" stroke="black" stroke-width="2" fill="none"
+                  d="M200 200 c 33 -100 66 -100 100 0">
+            </path>
+
+            <use id="fireCell" xlink:href="#powercell"></use>
+            <use id="apexCell" xlink:href="#powercell"></use>
+            <use id="outerCell" xlink:href="#powercell"></use>
+            <use id="innerCell" xlink:href="#powercell"></use>
+        </g>
+
+    </svg>
+    <form onchange="trajectory()">
+        <fieldset>
+            <legend>Infinite Recharge&trade; Shooter Calculation (in vacuum)</legend>
+            <fieldset>
+                <legend>Target Information</legend>
+                <label><span style="font-style: italic;">h</span><sub>2</sub>: </label><input id="h2input" readonly type="number" min="0" max="99" step="0.001" />
+                <label><span style="font-style: italic;">h</span><sub>min</sub> </label><input id="hmininput" readonly type="number" min="0" max="99" step="0.001" />
+                <label><span style="font-style: italic;">h</span><sub>max</sub>: </label><input id="hmaxinput" readonly type="number" min="0" max="99" step="0.001" />
+            </fieldset>
+            <fieldset>
+                <legend>Firing conditions</legend>
+                <label><span style="font-style: italic;">h</span><sub>0</sub>: </label><input id="h0input" type="number" value="2.0" min="0" max="9" step="0.1" /> feet<br />
+                <label><span style="font-style: italic;">D</span> </label><input id="Dinput" type="number" value="10.0" min="0" max="99" step="0.1" /> feet<br />
+                <label><span style="font-style: italic;">v</span><sub>0</sub> </label><input id="v0input" type="number" value="8.6" min="0" max="99" step="0.05" /> meters/second<br />
+                <label><span style="font-style: italic;">&theta;</span> </label><input id="thetainput" type="number" value="45" min="0" max="90" step="1" /> degrees<br />
+            </fieldset>
+            <fieldset>
+                <legend>Results</legend>
+                <label><span style="font-style: italic;">y</span><sub>1</sub>: </label><input id="y1result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t1result" readonly type="number" min="-99" max="99" step="0.001" /><br />
+                <label><span style="font-style: italic;">y</span><sub>2</sub>: </label><input id="y2result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t2result" readonly type="number" min="-99" max="99" step="0.001" />
+                <input id="y2hit" type="checkbox" readonly /><label>Outer Goal: Nothing but Net</label><br />
+                <label><span style="font-style: italic;">y</span><sub>3</sub>: </label><input id="y3result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t3result" readonly type="number" min="-99" max="99" step="0.001" />
+                <input id="y3hit" type="checkbox" readonly /><label>Inner Goal: Nothing but Net</label>
+            </fieldset>
+        </fieldset>
+    </form>
+
+    <script type="text/javascript">
+        function ftFromMeters(m) {
+            return m / (0.0254 * 12);
+        }
+        function mFromFeet(ft) {
+            return ft * 12 * 0.0254;
+        }
+
+        /**
+         * convert dimension to x pixels
+         * @param {number} x - x position
+         * @returns {number} x pixel coordinate
+         */
+        function xPixel(x) {
+            return 300.0 - 10 * ftFromMeters(x);
+        }
+        /**
+         * convert dimension to y pixels
+         * @param {number} y - y position
+         * @returns {number} y pixel coordinate
+         */
+        function yPixel(y) {
+            return 200.0 - 10 * ftFromMeters(y);
+        }
+
+        /**
+         * Update the trajectory using the new values in the form
+         */
+        function trajectory() {
+            // acceleration of gravity (m/s/s)
+            var g = 9.8;
+
+            // distance to target
+            var D = mFromFeet(Dinput.value);
+
+            // the target behind is 2 ft 5.25 inches further back.
+            // same height, but diameter is 13 inches
+            var D3 = D + mFromFeet(2 + 5.25 / 12);
+
+            // firing height - a robot parameter
+            var h0 = mFromFeet(h0input.value);
+
+            // the hexagon target is centered at
+            var h2 = mFromFeet(8.0 + 2.25 / 12);
+            var hmin = h2 - mFromFeet(1.25 - 3.5 / 12);
+            var hmax = h2 + mFromFeet(1.25 - 3.5 / 12);
+
+            // INNER PORT reduced by power cell radius
+            var hmin3 = h2 - mFromFeet((6.5 - 3.5) / 12);
+            var hmax3 = h2 + mFromFeet((6.5 - 3.5) / 12);
+
+            // firing angle
+            var theta = thetainput.value * (Math.PI / 180);
+
+            // firing velocity
+            var v = v0input.value;
+
+            // calculate the component velocities
+            var vx = v * Math.cos(theta);
+            var vy = v * Math.sin(theta);
+
+            // calculate time to apex
+            var t1 = vy / g;
+            // calculate height at that time
+            var h1 = h0 + vy * t1 - 0.5 * g * t1 * t1;
+
+            // calculate time to OUTER PORT (i.e., distance D)
+            var t2 = D / vx;
+            // calculate height at that time
+            var y = h0 + vy * t2 - 0.5 * g * t2 * t2;
+
+            // calculate time to INNER PORT (i.e., distance D3)
+            var t3 = D3 / vx;
+            // calculate height at that time
+            var y3 = h0 + vy * t3 - 0.5 * g * t3 * t3;
+
+            // report the target information
+            h2input.value = ftFromMeters(h2).toFixed(3);
+            hmininput.value = ftFromMeters(hmin).toFixed(3);
+            hmaxinput.value = ftFromMeters(hmax).toFixed(3);
+
+            // report the results of the calculations
+            t1result.value = t1.toFixed(3);
+            y1result.value = ftFromMeters(h1).toFixed(3);
+
+            t2result.value = t2.toFixed(3);
+            y2result.value = ftFromMeters(y).toFixed(3);
+            y2hit.checked = (hmin < y && y < hmax);;
+
+            t3result.value = t3.toFixed(3);
+            y3result.value = ftFromMeters(y3).toFixed(3);
+            y3hit.checked = (hmin3 < y3 && y3 < hmax3);
+
+            // SVG Plotting
+
+            // put robot972 distance D away; add defender
+            // have robot fire 0.5 feet forward of frame perimeter
+            robot972.setAttribute("x", xPixel(D + mFromFeet(0.5)));
+            // have defender be 2.0 feet long with robot bumpers 0.2 feet
+            robot254.setAttribute("x", xPixel(D + mFromFeet(0.5 - 2.0 - 2 * 0.2)));
+
+            // pixel firing position
+            var p0x = xPixel(D);
+            var p0y = yPixel(h0);
+
+            // pixel control point
+            var p1x = xPixel(D - t1 * vx);
+            var p1y = yPixel(h0 + 2 * (h1 - h0));
+
+            // firing position mirrored about apex x-coordinate
+            var p2x = p0x + 2 * (p1x - p0x);
+            var p2y = p0y;
+
+            // plot the trajectory
+            pathTrajectory.setAttribute("d",
+                "M" + p0x + " " + p0y +
+                "Q" + p1x + " " + p1y + " " + p2x + " " + p2y);
+
+            // plot positions of the power cells
+
+            // firing position
+            fireCell.setAttribute("x", xPixel(D));
+            fireCell.setAttribute("y", yPixel(h0));
+
+            // plot apexCell position
+            apexCell.setAttribute("x", xPixel(D - t1 * vx));
+            apexCell.setAttribute("y", yPixel(h1));
+
+            // plot outerCell position
+            outerCell.setAttribute("x", xPixel(D - t2 * vx));
+            outerCell.setAttribute("y", yPixel(y));
+
+            // plot innerCell position
+            innerCell.setAttribute("x", xPixel(D - t3 * vx));
+            innerCell.setAttribute("y", yPixel(y3));
+        }
+
+        trajectory();
+    </script>
+
+
+    <h2>Generator Switch</h2>
+    <p>
+        Temporary home....
+    </p>
+    <svg height="440" viewBox="-110 -130 220 140"
+         xmlns="http://www.w3c.org/2000/svg"
+         xmlns:xlink="http://www.w3c.org/1999/xlink">
+        <title>Generator Switch</title>
+
+        <defs>
+            <g id="robotW">
+                <rect y="180.0" width="20.0" height="18.0" fill="lightblue" stroke="black" stroke-width="0.5"></rect>
+
+                <rect x="-2.0" y="195.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+                <rect x="20.0" y="195.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+
+                <circle cx="5" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+                <circle cx="15" cy="197.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+            </g>
+
+            <g id="weight">
+                <circle cx="0" cy="15" r="5" fill="red" stroke="black" stroke-width="0.5"></circle>
+                <line x1="0" y1="0" x2="0" y2="15" stroke="black"></line>
+            </g>
+
+            <g id="handle">
+                <desc>
+                    The pivot is 9 ft 3 3/8 in above the floor = 108 + 3.375 = 111.375 inches.
+                    At the start of the match, the top of the run is 5 ft 3 in above the floor = 63 inches.
+                </desc>
+                <g>
+                    <title>Pivot</title>
+                    <circle r="2" fill="blue"></circle>
+                    <line x1="-4" y1="0" x2="4" y2="0" stroke="black" stroke-width="0.5"></line>
+                    <line x1="0" y1="-4" x2="0" y2="4" stroke="black" stroke-width="0.5"></line>
+                </g>
+
+                <circle cx="0" cy="26" r="5">
+                    <title>Center of Mass</title>
+                </circle>
+
+                <path d="M0,-5 L -50,45 -50,48 50,48 50,45 Z" stroke="black" stroke-width="2" fill="none"></path>
+
+                <line x1="-44" y1="38" x2="44" y2="38" stroke="black" stroke-width="1.66"></line>
+
+                <line x1="-50" y1="48" x2="50" y2="48" stroke="orange" stroke-width="1.66"></line>
+            </g>
+        </defs>
+
+        <rect x="-110" y="-130" width="220" height="140" fill="pink"></rect>
+
+        <g stroke="gray" stroke-width="0.5">
+            <title>Grid</title>
+            <line x1="-110" x2="110" y1="0" y2="0"></line>
+            <line x1="-110" x2="110" y1="-24" y2="-24"></line>
+            <line x1="-110" x2="110" y1="-48" y2="-48"></line>
+            <line x1="-110" x2="110" y1="-72" y2="-72"></line>
+            <line x1="-110" x2="110" y1="-96" y2="-96"></line>
+            <line x1="-110" x2="110" y1="-120" y2="-120"></line>
+
+            <line x1="-110" x2="110" y1="5" y2="5" stroke-width="10"></line>
+
+            <line x1="-96" x2="-96" y1="0" y2="-130"></line>
+            <line x1="-72" x2="-72" y1="0" y2="-130"></line>
+            <line x1="-48" x2="-48" y1="0" y2="-130"></line>
+            <line x1="-24" x2="-24" y1="0" y2="-130"></line>
+            <line x1="0" x2="0" y1="0" y2="-130"></line>
+            <line x1="24" x2="24" y1="0" y2="-130"></line>
+            <line x1="48" x2="48" y1="0" y2="-130"></line>
+            <line x1="72" x2="72" y1="0" y2="-130"></line>
+            <line x1="96" x2="96" y1="0" y2="-130"></line>
+        </g>
+
+        <g transform="translate(0,-111.375)">
+            <title>Handle</title>
+            <desc>
+                The pivot is 9&prime; 3 3/8&Prime; above the floor.
+                Level if within 8&deg; of horizontal.
+                Hard stops at 14.5&deg;
+                Rotating weight is about 93 pounds (&cong; 42 kg) and
+                a center of mass that is about 2 ft 2 in below the pivot.
+                Rung is 1.25 inch schedule 40 aluminum pipe (1.66 inch OD).
+                Exposed section is 4 ft 7 5/8.
+            </desc>
+
+            <g id="handleSwitch" transform="rotate(15)">
+                <use xlink:href="#handle" x="0" y="0"></use>
+
+                <use id="weightSVG1" xlink:href="#weight" transform="translate(-30, 48.375) rotate(-15)"></use>
+                <use id="weightSVG2" xlink:href="#weight" transform="translate(4, 48.375) rotate(-15)"></use>
+                <use id="weightSVG3" xlink:href="#weight" transform="translate(30, 48.375) rotate(-15)"></use>
+            </g>
+        </g>
+
+        <text x="36" y="-108" font-size="6">Angle = <tspan id="angleResult"></tspan></text>
+
+    </svg>
+    <form onchange="updateSwitch()">
+        <fieldset>
+            <legend>Robot climbers</legend>
+            <label>Robot 1: </label><input id="dist1" type="number" min="-50" max="50" value="-30" /><label> inches, </label><input id="weight1" type="number" value="145" /><label> pounds</label><br />
+            <label>Robot 2: </label><input id="dist2" type="number" min="-50" max="50" value="4" /><label> inches, </label><input id="weight2" type="number" value="122" /><label> pounds</label><br />
+            <label>Robot 3: </label><input id="dist3" type="number" min="-50" max="50" value="40" /><label> inches, </label><input id="weight3" type="number" value="145" /><label> pounds</label>
+        </fieldset>
+    </form>
+
+    <script type="text/javascript">
+        // the handle is 93 pounds 26 inches below the pivot
+        //   the pivot is 9 feet 3 3/8 inches above the floor
+        // the robots will present a force on the rung
+        //   the top of the rung is 5 ft 3 inches above the floor
+
+        function SwitchLoad(x, y, w) {
+            this.x = x;
+            this.y = y;
+            this.w = w;
+        }
+
+        /** Calculate the torque for a given angle
+         * @param {number} theta - angle of the switch
+         * @returns {number} torque
+         */
+        SwitchLoad.prototype.torque = function (theta) {
+            var r = Math.hypot(this.x, this.y);
+            var a = Math.atan2(this.x, this.y) - theta;
+            var m = this.w * r * Math.sin(a);
+
+            return m;
+        }
+
+        function totalTorque(thetaRadians, aload) {
+            var m = 0;
+            var i;
+
+            for (i = 0; i < aload.length; i++) {
+                m += aload[i].torque(thetaRadians);
+            }
+
+            return m;
+        }
+
+        function updateSwitch() {
+            // console.log("updateSwitch()");
+
+            var theta = -0.0;
+            var thetaRadians = theta * Math.PI / 180.0;
+
+            // start a list of loads
+            var aload = [];
+
+            var x0 = 0;
+            var y0 = 26.0;
+            var w0 = 66.0;
+            aload[0] = new SwitchLoad(x0, y0, w0);
+
+            // distance from pivot to top of handle
+            var y = 48.375;
+
+            var x1 = dist1.valueAsNumber;
+            var w1 = weight1.valueAsNumber;
+            aload[1] = new SwitchLoad(x1, y, w1);
+
+            var x2 = dist2.valueAsNumber;
+            var w2 = weight2.valueAsNumber;
+            aload[2] = new SwitchLoad(x2, y, w2);
+
+            var x3 = dist3.valueAsNumber;
+            var w3 = weight3.valueAsNumber;
+            aload[3] = new SwitchLoad(x3, y, w3);
+
+            var theta0 = -14.5 * Math.PI / 180.0;
+            var m0 = totalTorque(theta0, aload);
+            var theta1 = +14.5 * Math.PI / 180.0;
+            var m1 = totalTorque(theta1, aload);
+
+            if (m0 > 0 && m1 > 0) {
+                console.log("No bracket A");
+                if (m0 > m1) theta = +14.5;
+                else theta = -14.5;
+            } else if (m0 < 0.0 && m1 < 0) {
+                console.log("No bracket B");
+                if (m0 > m1) theta = -14.5;
+                else theta = +14.5;
+            } else {
+                var j;
+
+                for (j = 0; j < 40; j++) {
+                    var tm = (theta0 + theta1) / 2;
+                    var mm = totalTorque(tm, aload);
+
+                    if (m0 < 0 && mm <= 0 || m0 > 0 && mm >= 0) {
+                        theta0 = tm;
+                        m0 = mm;
+                    }
+
+                    if (m1 < 0 && mm <= 0 || m1 > 0 && mm >= 0) {
+                        theta1 = tm;
+                        m1 = mm;
+                    }
+                }
+
+                theta = theta0 * 180.0 / Math.PI;
+                // console.log("torques: " + m0 + ", " + m1);
+            }
+
+            angleResult.textContent = theta.toFixed(2);
+
+            // tilt the switch
+            // SVGTransformList
+            var tlist = handleSwitch.transform.baseVal;
+            // .numberOfItems
+            // console.log("numberOfItems = " + tlist.numberOfItems);
+            // .getItem(0)
+            // we expect tlist[0] to be a rotate
+            tlist[0].setRotate(theta, 0, 0);
+
+            // plot the positions
+            weightSVG1.transform.baseVal[0].setTranslate(x1, y);
+            weightSVG2.transform.baseVal[0].setTranslate(x2, y);
+            weightSVG3.transform.baseVal[0].setTranslate(x3, y);
+
+            weightSVG1.transform.baseVal[1].setRotate(-theta, 0, 0);
+            weightSVG2.transform.baseVal[1].setRotate(-theta, 0, 0);
+            weightSVG3.transform.baseVal[1].setRotate(-theta, 0, 0);
+        }
+
+        updateSwitch();
+    </script>
+
+</body>
+
+</html>
