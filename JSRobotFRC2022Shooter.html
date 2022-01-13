@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="keywords" content="Rapid React, First Robotics Competition, FRC, FRC 2022, shooter" />
+    <meta name="author" content="Gerald Roylance" />
+    <title>FRC 2022 Shooter (Rapid React)</title>
+    <link rel="icon" type="image/svg+xml" href="Images/favicon.svg" />
+    <link rel="stylesheet" type="text/css" href="Content/glrstyle.css" />
+</head>
+<body>
+
+    <h1>FRC 2022 Shooter (Rapid React)</h1>
+    <ul>
+        <li><a href="JScriptTrials.html">Back to top</a></li>
+    </ul>
+
+    <h2>Calculator</h2>
+    <svg height="300" viewBox="-10 -10 420 220"
+         xmlns="http://www.w3c.org/2000/svg"
+         xmlns:xlink="http://www.w3c.org/1999/xlink">
+
+        <defs>
+            <g id="cargo">
+                <circle r="4.75" fill="blue" stroke="black" stroke-width="0.2"></circle>
+            </g>
+            <g id="robot1" transform="translate(0,200)">
+                <rect y="-40.0" width="20.0" height="38.0" fill="lightblue" stroke="black" stroke-width="0.5"></rect>
+
+                <!-- bummpers -->
+                <rect x="-2.0" y="-5.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+                <rect x="20.0" y="-5.0" width="2.0" height="3.0" fill="blue" stroke="black" stroke-width="0.5"></rect>
+
+                <!-- wheels -->
+                <circle cx="5" cy="-2.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+                <circle cx="15" cy="-2.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+            </g>
+            <g id="robotD" transform="translate(0,200)">
+                <title>Defensive Robot</title>
+                <!-- main body -->
+                <rect y="-52.0" width="20.0" height="50.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+
+                <!-- defense shield -->
+                <rect x="-16" y="-52.0" width="16" height="5.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+
+                <!-- bumpers -->
+                <rect x="-2.0" y="-5.0" width="2.0" height="3.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+                <rect x="20.0" y="-5.0" width="2.0" height="3.0" fill="red" stroke="black" stroke-width="0.5"></rect>
+
+                <!-- wheels -->
+                <circle cx="5" cy="-2.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+                <circle cx="15" cy="-2.5" r="2.5" fill="blue" stroke="black" stroke-width="0.1"></circle>
+            </g>
+        </defs>
+
+        <rect x="-10" y="-10" width="420" height="220" fill="pink"></rect>
+        <text x="0" y="10" font-family="sans-serif" font-size="10">5 feet per division</text>
+
+        <g stroke="gray" stroke-width="1">
+            <title>Grid</title>
+            <line x1="-10" x2="410" y1="20" y2="20"></line>
+            <line x1="-10" x2="410" y1="80" y2="80"></line>
+            <line x1="-10" x2="410" y1="140" y2="140"></line>
+            <line x1="-10" x2="410" y1="205" y2="205" stroke-width="10"></line>
+
+            <line x1="0" x2="0" y1="-10" y2="200"></line>
+            <line x1="60" x2="60" y1="-10" y2="200"></line>
+            <line x1="120" x2="120" y1="-10" y2="200"></line>
+            <line x1="180" x2="180" y1="-10" y2="200"></line>
+            <line x1="240" x2="240" y1="-10" y2="200"></line>
+            <line x1="300" x2="300" y1="-10" y2="200"></line>
+            <line x1="360" x2="360" y1="-10" y2="200"></line>
+
+            <!-- Max height of robot is 4 feet 4 inches = 52. 200 pix max. -->
+            <line x1="-10" x2="410" y1="148" y2="148" stroke="gray" stroke-dasharray="5 5">
+                <title>Maximum height of robot</title>
+            </line>
+        </g>
+
+        <g transform="translate(300,200)">
+            <title>Hub</title>
+
+            <g>
+                <title>upper hub &mdash; dimensions not accurate</title>
+                <desc>The upper hub 4 feet in diameter and 8 feet 8 inches tall</desc>
+                <path d="M0,-104 H24 L12,-72 H-12 L-24,-104 H24 Z"
+                      stroke="black" stroke-width="1" fill="white">
+
+                </path>
+            </g>
+
+            <g>
+                <title>lower hub: 3 feet 5 in high, 5 feet 1/8 inch diameter</title>
+                <rect x="-33.875" y="-22.5" width="67.75" height="22.5" fill="lightblue" stroke="black">
+                    <title>fender: 2 feet 9 7/8 in to center, 1 ft 10.5 inch high</title>
+                </rect>
+                <path d="M0,-41 L 30.0625,-41 L 24,-22.5 H-24 L-30.0625,-41 L0,-41 Z"
+                      stroke="black" stroke-width="1.0" fill="white">
+
+                </path>
+            </g>
+        </g>
+
+        <use id="robot972" xlink:href="#robot1" x="100" y="0">
+            <title>Offensive Robot</title>
+        </use>
+        <use id="robot254" xlink:href="#robotD" x="100" y="0">
+            <title>Defensive Robot</title>
+        </use>
+
+        <g>
+            <title>Cargo trajectory</title>
+            <path id="pathTrajectory" stroke="black" stroke-width="2" fill="none"
+                  d="M200 200 c 33 -100 66 -100 100 0">
+            </path>
+
+            <use id="fireCell" xlink:href="#cargo"><title>firing position</title></use>
+            <use id="apexCell" xlink:href="#cargo"><title>apex of arc</title></use>
+            <use id="outerCell" xlink:href="#cargo"><title>upper hub height</title></use>
+            <use id="innerCell" xlink:href="#cargo"><title>lower hub height</title></use>
+        </g>
+
+    </svg>
+    <form onchange="trajectory()">
+        <fieldset>
+            <legend>Rapid React shooter calculation (in vacuum)</legend>
+            <fieldset>
+                <legend>Firing conditions</legend>
+                <label><span style="font-style: italic;">D</span>: </label><input id="Dinput" type="number" value="10.0" min="0" max="99" step="0.1" /> feet &mdash; distance from center of goal<br />
+                <label><span style="font-style: italic;">h</span><sub>0</sub>: </label><input id="h0input" type="number" value="2.0" min="0" max="9" step="0.1" /> feet &mdash; shooter exit height<br />
+                <label><span style="font-style: italic;">v</span><sub>0</sub>: </label><input id="v0input" type="number" value="8.6" min="0" max="99" step="0.05" /> meters/second &mdash; exit velocity<br />
+                <label><span style="font-style: italic;">&theta;</span>: </label><input id="thetainput" type="number" value="45" min="0" max="90" step="1" /> degrees &mdash; shooter exit angle<br />
+                <label><span style="font-style: italic;">E</span>: </label><input id="energy" type="number" value="0" readonly /> Joules &mdash; cargo energy<br />
+            </fieldset>
+            <fieldset>
+                <legend>Results</legend>
+                <label><span style="font-style: italic;">y</span><sub>1</sub>: </label><input id="y1result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t1result" readonly type="number" min="-99" max="99" step="0.001" /><br />
+                <label><span style="font-style: italic;">y</span><sub>2</sub>: </label><input id="y2result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t2result" readonly type="number" min="-99" max="99" step="0.001" /><br />
+                <label><span style="font-style: italic;">y</span><sub>3</sub>: </label><input id="y3result" readonly type="number" min="0" max="99" step="0.001" /><label> at time </label><input id="t3result" readonly type="number" min="-99" max="99" step="0.001" />
+            </fieldset>
+        </fieldset>
+    </form>
+
+    <script type="text/javascript">
+        function ftFromMeters(m) {
+            return m / (0.0254 * 12);
+        }
+        function mFromFeet(ft) {
+            return ft * 12 * 0.0254;
+        }
+
+        /**
+         * convert dimension to x pixels
+         * @param {number} x - x position
+         * @returns {number} x pixel coordinate
+         */
+        function xPixel(x) {
+            return 300.0 - 12 * ftFromMeters(x);
+        }
+        /**
+         * convert dimension to y pixels
+         * @param {number} y - y position
+         * @returns {number} y pixel coordinate
+         */
+        function yPixel(y) {
+            return 200.0 - 12 * ftFromMeters(y);
+        }
+
+        /** solve the quadratic equation */
+        function quadeqnplus(a, b, c) {
+            var disc = b * b - 4 * a * c;
+            if (disc >= 0.0) return (-b - Math.sqrt(disc)) / (2.0 * a);
+            else return -1.0;
+        }
+
+        /**
+         * Update the trajectory using the new values in the form
+         */
+        function trajectory() {
+            // acceleration of gravity (m/s/s)
+            var g = 9.8;
+
+            // distance to target
+            var D = mFromFeet(Dinput.value);
+
+            // set the visibility of the defensive robot
+            robot254.setAttribute("visibility", (Dinput.value < 6.5) ? "hidden" : "visible");
+
+            // firing height - a robot parameter
+            var h0 = mFromFeet(h0input.value);
+
+            // the upper hub is 8 feet 8 inches high
+            var h2 = mFromFeet(8.0 + 8.0 / 12);
+
+            // the lower hub is 3 feet 5 inches high
+            var h3 = mFromFeet(3.0 + 5.0 / 12);
+
+            // firing angle
+            var theta = thetainput.value * (Math.PI / 180);
+
+            // firing velocity
+            var v = v0input.value;
+
+            // calculate the energy
+            var E = (v * v) * 0.270;
+
+            // calculate the component velocities
+            var vx = v * Math.cos(theta);
+            var vy = v * Math.sin(theta);
+
+            // calculate time to apex
+            var t1 = vy / g;
+            // calculate height at that time
+            var h1 = h0 + vy * t1 - 0.5 * g * t1 * t1;
+
+            // calculate time to upper hub (height h2)
+            var t2 = quadeqnplus(-0.5 * g, vy, h0 - h2);
+            // calculate height at that time
+            var y = h0 + vy * t2 - 0.5 * g * t2 * t2;
+
+            // calculate time to lower hub (height h3)
+            var t3 = quadeqnplus(-0.5 * g, vy, h0 - h3);
+            // calculate height at that time
+            var y3 = h0 + vy * t3 - 0.5 * g * t3 * t3;
+
+            // report the energy
+            energy.value = E.toFixed(2);
+
+            // report the results of the calculations
+            t1result.value = t1.toFixed(3);
+            y1result.value = ftFromMeters(h1).toFixed(3);
+
+            if (t2 < 0) {
+                t2result.value = "";
+                y2result.value = "";
+            }
+            else {
+                t2result.value = t2.toFixed(3);
+                y2result.value = ftFromMeters(y).toFixed(3);
+                // y2hit.checked = (hmin < y && y < hmax);;
+            }
+
+            if (t3 < 0) {
+                t3result.value = "";
+                y3result.value = "";
+            }
+            else {
+                t3result.value = t3.toFixed(3);
+                y3result.value = ftFromMeters(y3).toFixed(3);
+                // y3hit.checked = (hmin3 < y3 && y3 < hmax3);
+            }
+
+            // SVG Plotting
+
+            // put robot972 distance D away; add defender
+            // have robot fire 0.5 feet forward of frame perimeter
+            robot972.setAttribute("x", xPixel(D + mFromFeet(0.5)));
+            // have defender be 2.0 feet long with robot bumpers 0.2 feet
+            robot254.setAttribute("x", xPixel(D + mFromFeet(0.5 - 2.0 - 2 * 0.2)));
+
+            // pixel firing position
+            var p0x = xPixel(D);
+            var p0y = yPixel(h0);
+
+            // pixel control point
+            var p1x = xPixel(D - t1 * vx);
+            var p1y = yPixel(h0 + 2 * (h1 - h0));
+
+            // firing position mirrored about apex x-coordinate
+            var p2x = p0x + 2 * (p1x - p0x);
+            var p2y = p0y;
+
+            // plot the trajectory
+            pathTrajectory.setAttribute("d",
+                "M" + p0x + " " + p0y +
+                "Q" + p1x + " " + p1y + " " + p2x + " " + p2y);
+
+            // plot positions of the power cells
+
+            // firing position
+            fireCell.setAttribute("x", xPixel(D));
+            fireCell.setAttribute("y", yPixel(h0));
+
+            // plot apexCell position
+            apexCell.setAttribute("x", xPixel(D - t1 * vx));
+            apexCell.setAttribute("y", yPixel(h1));
+
+            // plot outerCell position
+            outerCell.setAttribute("x", xPixel(D - t2 * vx));
+            outerCell.setAttribute("y", yPixel(y));
+
+            // plot innerCell position
+            innerCell.setAttribute("x", xPixel(D - t3 * vx));
+            innerCell.setAttribute("y", yPixel(y3));
+        }
+
+        trajectory();
+    </script>
+
+</body>
+</html>
