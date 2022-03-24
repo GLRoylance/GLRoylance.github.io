@@ -401,7 +401,7 @@
         </fieldset>
         <fieldset>
             <legend>API Key</legend>
-            <label>TBA key: <input id="inputKeyTBA" type="text" size="64" /></label>
+            <label>TBA key: <input id="inputKeyTBA" type="text" size="64" autocomplete="on"/></label>
         </fieldset>
     </form>
 
@@ -528,7 +528,6 @@
         var urlBase = "https://www.thebluealliance.com/api/v3";
 
         // try local storage: key, setItem, getItem, removeItem, clear
-        inputKeyTBA.value = keyTBA;
         inputKeyTBA.addEventListener("change", (event) => { localStorage.setItem("keyTBA", inputKeyTBA.value); });
         if (localStorage.getItem("keyTBA")) {
             keyTBA = localStorage.getItem("keyTBA");
