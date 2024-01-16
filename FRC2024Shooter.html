@@ -122,17 +122,17 @@
             <legend>Crescendo shooter calculation (in vacuum)</legend>
             <fieldset>
                 <legend>Firing conditions</legend>
-                <label><span style="font-style: italic;">D</span>: </label><input id="Dinput" type="number" value="10.0" min="0" max="99" step="0.1" /> feet &mdash; distance from center of goal<br />
-                <label><span style="font-style: italic;">h</span><sub>0</sub>: </label><input id="h0input" type="number" value="2.0" min="0" max="9" step="0.1" /> feet &mdash; shooter exit height<br />
-                <label><span style="font-style: italic;">v</span><sub>0</sub>: </label><input id="v0input" type="number" value="8.6" min="0" max="99" step="0.05" /> meters/second &mdash; exit velocity<br />
-                <label><span style="font-style: italic;">&theta;</span>: </label><input id="thetainput" type="number" value="45" min="0" max="90" step="1" /> degrees &mdash; shooter exit angle<br />
+                <label><span style="font-style: italic;">D</span>: </label><input id="Dinput" type="number" value="10.0" min="0" max="99" step="0.1" size="8" /> feet &mdash; distance from alliance wall<br />
+                <label><span style="font-style: italic;">h</span><sub>0</sub>: </label><input id="h0input" type="number" value="2.0" min="0" max="9" step="0.1" size="8" /> feet &mdash; shooter exit height<br />
+                <label><span style="font-style: italic;">v</span><sub>0</sub>: </label><input id="v0input" type="number" value="8.6" min="0" max="99" step="0.05" size="8" /> meters/second &mdash; exit velocity<br />
+                <label><span style="font-style: italic;">&theta;</span>: </label><input id="thetainput" type="number" value="45" min="0" max="90" step="1" size="8" /> degrees &mdash; shooter exit angle<br />
             </fieldset>
             <fieldset>
                 <legend>Results</legend>
-                <label><span style="font-style: italic;">E</span>: </label><input id="energy" type="number" value="0" readonly /> Joules &mdash; cargo energy<br />
-                <label><span style="font-style: italic;">y</span><sub>1</sub>: </label><input id="y1result" readonly type="number" /><label> at time </label><input id="t1result" readonly type="number" /> Apex <br />
-                <label><span style="font-style: italic;">y</span><sub>2</sub>: </label><input id="y2result" readonly type="number" /><label> at time </label><input id="t2result" readonly type="number" /> Speaker front<br />
-                <label><span style="font-style: italic;">y</span><sub>3</sub>: </label><input id="y3result" readonly type="number" /><label> at time </label><input id="t3result" readonly type="number" /> Alliance wall
+                <label><span style="font-style: italic;">E</span>: </label><input id="energy" type="number" value="0" readonly size="8" /> Joules<br />
+                <label><span style="font-style: italic;">y</span><sub>1</sub>: </label><input id="y1result" readonly type="number" size="8"/><label> at time </label><input id="t1result" readonly type="number" size="8" /> Apex <br />
+                <label><span style="font-style: italic;">y</span><sub>2</sub>: </label><input id="y2result" readonly type="number" size="8"/><label> at time </label><input id="t2result" readonly type="number" size="8" /> Speaker front<br />
+                <label><span style="font-style: italic;">y</span><sub>3</sub>: </label><input id="y3result" readonly type="number" size="8"/><label> at time </label><input id="t3result" readonly type="number" size="8" /> Alliance wall
             </fieldset>
         </fieldset>
     </form>
