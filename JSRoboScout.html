@@ -2,9 +2,10 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot Scouting</title>
-    <style type="text/css" >
+    <title>RoboScout</title>
+    <link rel="icon" type="image/svg+xml" href="Images/favicon.svg" />
+    <link rel="stylesheet" type="text/css" href="Content/glrstyle.css" />
+    <style type="text/css">
         dl dt {
             font-family: monospace;
         }
@@ -12,547 +13,492 @@
         tr.baddata {
             background-color: red;
         }
+
+        .teamNickname {
+            text-align: center;
+            background-color: lightblue;
+            font-weight: bold;
+        }
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+            /* Style the buttons that are used to open the tab content */
+            .tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 14px 16px;
+                transition: 0.3s;
+            }
+
+                /* Change background color of buttons on hover */
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                /* Create an active/current tablink class */
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+            animation: fadeEffect 2s; /* Fading effect takes 1 second */
+        }
+
+        /* Go from zero to full opacity */
+        @keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Robot Scouting</h1>
+    <!-- Tab links -->
+    <div class="tab">
+        <button id="tabEvent" class="tablinks" type="button">Event</button>
+        <button id="tabTeams" class="tablinks" type="button">Teams</button>
+        <button id="tabOPRs" class="tablinks" type="button">OPRs</button>
+        <button id="tabMatchInfo" class="tablinks" type="button">Match Info</button>
+        <button id="tabTeamView" class="tablinks" type="button">Team View</button>
+        <button id="tabHeatMap" class="tablinks" type="button">Heat Map</button>
+        <button id="tabMornay" class="tablinks" type="button">Mornay</button>
+    </div>
 
-    <h2>Introduction</h2>
-    <p>
-        Robot scouting is important, but choosing the scouting details can be difficult.
-    </p>
+    <!-- Tab content -->
+    <div id="divEvent" class="tabcontent">
+        <h2>Event</h2>
+        <p>
+            The form can be improved by restricting the time range of the events.
+            One selection box could be all events.
+            A second selection box can be for the selected week.
+            More intuitive would use the week box as a filter.
+            If the user sets the week, then filter the selection box.
+            The week should be null or an integer week number.
+            The week number is zero-based.
+            We want to select all, a particular week, or pre-/post-season.
+        </p>
+        <form>
+            <fieldset>
+                <legend>Event</legend>
+                <label>
+                    Year:
+                    <select id="yearEvent" type="text" value="2019">
+                        <option value="2010">2010 Breakaway</option>
+                        <option value="2011">2011 Logo Motion</option>
+                        <option value="2012">2012 Rebound Rumble</option>
+                        <option value="2013">2013 Ultimate Ascent</option>
+                        <option value="2014">2014 Aerial Assist</option>
+                        <option value="2015">2015 Recycle Rush</option>
+                        <option value="2016">2016 FIRST Stronghold</option>
+                        <option value="2017">2017 FIRST Steamworks</option>
+                        <option value="2018">2018 FIRST Power Up</option>
+                        <option value="2019">2019 Destination: Deep Space</option>
+                        <option value="2020">2020 Infinite Recharge</option>
+                        <option value="2021">2021 Infinite Recharge (2021)</option>
+                        <option value="2022" selected>2022 Rapid React</option>
+                        <option value="2023">2023 Charged Up</option>
+                        <option value="2024">2024 Crescendo</option>
+                        <option value="2025">2025 Reefscape</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </label><br />
+                <label>Event: <select id="selEvent"></select></label><br />
+                <label>
+                    Week:
+                    <select id="weekEvent">
+                        <option value="-1" selected>all</option>
+                        <option value="0">1</option>
+                        <option value="1">2</option>
+                        <option value="2">3</option>
+                        <option value="3">4</option>
+                        <option value="4">5</option>
+                        <option value="5">6</option>
+                        <option value="6">7</option>
+                        <option value="-2">pre-/post-season</option>
+                    </select>
+                </label>
+                <label>Start: <input id="dateEventStart" type="date" readonly /></label><br />
+                <label>Location: <input id="locationName" type="text" size="64" readonly /></label><br />
+                <label>Address: <input id="locationEvent" type="text" size="64" readonly /></label>
+            </fieldset>
+            <fieldset>
+                <legend>API Key</legend>
+                <label>TBA key: <input id="inputKeyTBA" type="text" size="80" /></label>
+            </fieldset>
+        </form>
+    </div>
 
-    <h2>Types of Scouting</h2>
-    <p>
-        There are two common types of scouting.
-        The first type of scouting is pit scouting, where scouts visit the pits, look at the robot, ask questions, and make judgments.
-        Pit scouting may not be very reliable because teams may give an overly optimistic report of their robot.
-        The second type of scouting is match scouting.
-        With more detailed match reporting by FIRST, some details may not be needed.
-    </p>
-    <p>
-        A needed focus is how the data will be used.
-        Will it be used to decide strategy in a qualification match?
-        For example, Greybots, team 973, would know the opposing teams capabilities long before the match started.
-        If none of the opposition can reach the scale, then that can influence match strategy.
-    </p>
-    <p>
-        Teams need not do extensive scouting early on.
-        A team could just look ahead to the next match, and check out the oppositions robots.
-        Then, when the team's alliance meets, they can offer a little insight into the opposing alliance.
-    </p>
-    <p>
-        Notion that only teams in the top 8 (or top 4 in FTC) need to scout because only those teams will be
-        selecting alliance partners.
-    </p>
-    <p>
-        Some teams will also visit the pits of their future alliance partners and offer help.
-        Teams can help any other team out, but it can be advantageous to focus on alliance mates.
-        971 has done things such as loaning batteries to alliance mates (some teams do not show up with enough batteries).
-    </p>
-    <p>
-        A rookie team, Technical Support 7419, had a very developed scouting application, but the application did not present results well.
-        Technical Support was willing to take robots with problems if those problems had apparently been fixed.
-        Bellarmine 254, on the other hand, wanted to see solid reliability.
-        If a robot had trouble in early rounds, then other troubles may arise after early troubles are fixed.
-        Generally, robot teams need to have working hardware early, and they need to exercise that hardware to find and exorcise the bugs.
-    </p>
+    <div id="divTeams" class="tabcontent">
+        <h2>Teams at an Event</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Team</th>
+                    <th>Nickname</th>
+                    <th>City</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody id="teamTable"></tbody>
+        </table>
+    </div>
 
-    <h2>Pit Scouting</h2>
-    <p>
-        Develop a form, post the data to a URL, and then present the results.
-        TBA can be used to fill in some details.
-        The primary focus of pit scouting should probably be scoring and defense abilities.
-        Any claims by the scouted team should be evaluated.
-        Alliance mates have claimed to score 12 game pieces, but during an actual match only scored 4.
-        Maybe during one practice run the team scored 12 pieces, but question is how the team performs in a typical match against
-        typical opposition.
-    </p>
-    <p>
-        Pit scouting can be done on paper.
-        High tech is not needed.
-        Results can be entered into a computer later.
-        Citrus Circuits would scout on tablets, and then use low tech communications to convey that information.
-        One of the problems at matches is teams are not allowed to set up their own WiFi networks.
-    </p>
-    <p>
-        There are judgments to make.
-        Is the robot well built and rugged or will it fall apart if you breathe on it?
-        Did the designers make reasonable choices?
-        Is the robot heavy and cumbersome for its tasks?
-    </p>
-    <p>
-        From the pit scouting report, one should be able to estimate the scoring potential.
-        For Deep Space, starting sandstorm in H2 is 6 points, returning to H3 is 12 points for 18 points.
-        A cycle time of 15 seconds gives 8 scores in 120 seconds; if they are mostly cargo, that is 24 points.
-        So scoring potential is 42 points.
-        Data also shows threats such as completing a rocket ship or a 15-point HAB for additional ranking points.
-        That may mean an alliance must defend against such a powerful robot.
-        Alternatively, a cycle time of 30 seconds means 4 scores; if the robot drops hatch panels or cargo
-        or frequently fails to
-        score game pieces, then the robot is not an offensive threat but may become a defender.
-    </p>
-    <p>
-        For some games, the scoring potential is not so clear.
-        Power Up does not have a clear correlation.
-        A robot may be able to deliver power cubes fast, but if the opposition delivers them faster,
-        the robot will not score any points.
-        Deep Space does have a clear correlation between delivering game pieces and scoring.
-        If a robot places a patch panel somewhere, that is worth 2 points; delivering cargo is worth 3 points.
-    </p>
-    <pre>
-        Weight
+    <div id="divOPRs" class="tabcontent">
+        <h2>Team Performance for the event</h2>
+        <p>
+            This view could also have the summary results of team scoring that is computed from the match results.
+        </p>
+        <table>
+            <thead id="theadOPR">
+                <tr>
+                    <th data-col="0">Team #</th>
+                    <th>Name</th>
+                    <th><abbr title="Offensive Power Rating" data-col="2">OPR</abbr></th>
+                    <th><abbr title="Defensive Power Rating" data-col="3">DPR</abbr></th>
+                    <th><abbr title="Calculated Contribution to the Winning Margin" data-col="4">CCWM</abbr></th>
+                </tr>
+            </thead>
+            <tbody id="opr">
+            </tbody>
+        </table>
+    </div>
 
-        credibility assessment
-        when was robot ready to drive? Indicates time to debug problems.
-        how much driver practice (would be good to see if team doing practice matches at the venue)
+    <div id="divTeamView" class="tabcontent">
+        <h2>Team View</h2>
+        <p>
+            Trying to give more detailed summary of performance.
+            This table should be emptied when the event changes.
+            This table should be updated when the match data is updated.
+        </p>
+        <p>
+            For Rapid React, the cargo is for the entire alliance rather than the team.
+            I want to do linear regression to estimate the cargo scores.
+        </p>
+        <button id="fillVisionButton" type="button">Fill Table</button>
+        <table id="tableVision">
+            <caption>Team Performance Summary</caption>
+            <thead>
+                <tr><th>Team</th><th>Number</th><th colspan="11">Match Data</th></tr>
+            </thead>
+        </table>
+    </div>
 
-        Drive train: (CIM, mini CIM, 775, Neo, Falcon)
-        West Coast Drive (center drop, omni wheels)
-        Mecanum
-        Swerve
-        Other
-        top speed (m/s)
+    <div id="divMatchInfo" class="tabcontent">
+        <h2>Matches</h2>
+        <p>
+            A simple table of the matches at an event.
+            Matches are not set until the day before qualifiers.
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Blue</th>
+                    <th>Red</th>
+                    <th>Winner</th>
+                </tr>
+            </thead>
+            <tbody id="matchTable">
+            </tbody>
+        </table>
 
-        Vision capability
+        <h3>Match Information</h3>
+        <p>
+            Clicking on an above match should provide the detail here.
+            This section could also be a live update.
+        </p>
+    </div>
 
-        Number of batteries, Number of chargers (shows maturity of the team and expectation)
+    <div id="divHeatMap" class="tabcontent">
+        <h2>Heat Map</h2>
+        <svg width="600" viewBox="-1 -1 60 30">
+            <rect width="58" height="28" fill="pink" />
+            <g transform="translate(0 28) scale(1 -1)">
+                <path id="robotR0" d="M 0 0 58 28" fill="none" stroke="red" stroke-width="0.1">
+                    <title>R0</title>
+                </path>
+                <path id="robotR1" d="M 0 0 58 28" fill="none" stroke="red" stroke-width="0.1">
+                    <title>R1</title>
+                </path>
+                <path id="robotR2" d="M 0 0 58 28" fill="none" stroke="red" stroke-width="0.1">
+                    <title>R2</title>
+                </path>
+                <path id="robotB0" d="M 0 0 58 28" fill="none" stroke="blue" stroke-width="0.1">
+                    <title>B0</title>
+                </path>
+                <path id="robotB1" d="M 0 0 58 28" fill="none" stroke="blue" stroke-width="0.1">
+                    <title>B1</title>
+                </path>
+                <path id="robotB2" d="M 0 0 58 28" fill="none" stroke="blue" stroke-width="0.1">
+                    <title>B2</title>
+                </path>
+            </g>
+        </svg>
+        <p>
+            Tried getting heat map data from 2019 SVR (2019casj), but just got a null.
+            OK, 2019 off season Chezy Champs (2019cc) has heat maps.
+            There are 1521 points in qualifying match 1.
+        </p>
+        <p>
+            Showing the first 15 seconds would show the auto routine.
+        </p>
+        <button id="buttonHeatMap" type="button">Get Heat Map</button>
+    </div>
 
-        Elevator (fixed stops)
-        Arm
-        Wrist
-        Turret
-        Shooter (single sheel, double wheel, linear, hooded)
+    <div id="divMornay" class="tabcontent">
+        <h2>Mornay's Pre-Event Summary</h2>
+        <p>
+            Mornay developed a table to describe the competition before
+            an event. 29 March 2022 email.
+            See <a href="https://docs.google.com/spreadsheets/d/1FLmC_4ftIXR2GUJWyLlp0VWMsZD9HUsXC9tbAID1bTA/edit#gid=1486412016">
+                Google Sheet: Team 972 Events_2022
+            </a>.
+        </p>
+        <button id="buttonMornay" type="button">Fill Table</button>
+        <table>
+            <caption>Pre-Event Summary</caption>
+            <thead>
+                <tr>
+                    <th rowspan="2">Team</th>
+                    <th rowspan="2">Ranking<br /> Score</th>
+                    <th rowspan="2">Avg.<br /> Match</th>
+                    <th rowspan="2">Avg.<br /> Hangar</th>
+                    <th rowspan="2">Avg. Taxi +<br /> Auto Cargo</th>
+                    <th colspan="5">W-L-T</th>
+                    <th rowspan="2">Week</th>
+                    <th rowspan="2">Regional</th>
+                    <th colspan="2">Qualifers</th>
+                    <th rowspan="2">Houston</th>
+                    <th rowspan="2">Auto Avg.</th>
+                    <th colspan="4">End Game</th>
+                    <th rowspan="2">OPR</th>
+                </tr>
+                <tr>
+                    <th title="wins">W</th>
+                    <th title="losses">L</th>
+                    <th title="ties">T</th>
+                    <th title="disqualified">DQ</th>
+                    <th title="played">Played</th>
+                    <th>Rank</th>
+                    <th>of</th>
+                    <th title="low rung">L</th>
+                    <th title="middle rung">M</th>
+                    <th title="high rung">H</th>
+                    <th title="traversal rung">T</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyMornay">
+                <tr>
+                    <td title="Iron Claw"><a href="http://ai.mit.edu">972</a></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>4</td>
+                    <td>Monterey Regional</td>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                    <td>17</td>
+                    <td>18</td>
+                    <td>19</td>
+                    <td>20</td>
+                </tr>
+            </tbody>
+        </table>
 
-        Many questions are specific to a game.
+        <h3>Alliance Selection</h3>
+        <p>
+            This table requires knowing the rankings.
+            Here we could have the 8 alliances.
+            Double clicking an entry in the table below should add to the next available alliance and remove from
+            the table of available teams.
+            I should be able to do an undo a selection. Maybe repeatedly.
+            In addition, the foot of the table should sum the parameters.
+            After the alliances are selected, we could automatically fill the table.
+        </p>
 
-        Point scoring
-        Hatch Panels: 0, level 1, 2, or 3; alignment method
-        Hatch Panel from ground.
-        Hatch Panel alignment speed/method/other metric
-        How often drop hatch panel (P{drop hatch panel})
-        Cargo: 0, level 1, 2, or 3
-        Pickup cargo from Ground
-        Pickup cargo from Depot (back corner often difficult)
-        Pickup cargo from Alliance Wall
-        cycle time
+        <h3>Previous Performance</h3>
+        <p>
+            Look at each team.
+            Find the events that a team has already played.<br />
+            <code>/team/{team_key}/events/{year}</code>,<br />
+            <code>/team/{team_key}/events/{year}/statuses</code>,<br />
+            <code>/team/{team_key}/events/{year}/keys</code>,<br />
+            A quick way to get the match data for an event (there is also a <code>/simple</code> version):<br />
+            <code>/team/{team_key}/event/{event_key}/matches</code>,<br />
+            <code>/team/{team_key}/awards/{year}</code>,<br />
+            <code>/team/{team_key}/matches/{year}</code> (for several matches),<br />
+            <code>/event/{event_key}/teams/statuses</code><br />
+            <code>/event/{event_key}/awards</code>
+        </p>
+        <p>
+            One way of finding teams with a ticket is to look at the teams registered for the Houston Championships.
+        </p>
 
-        Autodeliver routine (fire and forget)
+    </div>
 
-        Can tell if bay already loaded?
+    <script type="module">
+        // get the FRC and TBA data definitions
+        // This import collects all the type definitions.
+        import "./modules/frcdefs.js";
 
-        Sandstorm
-        start H1 (3 points) or H2 (6 points) (leap or controlled)
-        Deliver Hatch Panel or Cargo (possibly 2 items during sandstorm)
-        Frame Rate 5 10 15 30 60
-        Pix Resolution 160, 320, 480, 640, 1920 (questions so we can believe 4 Mb/s data rate)
-        DME
-        CEP 1 cm, 2 cm, 5 cm
-        Vision targets; acquistion time (eg, 170 ms)
-        Flood/Lime light
-        18 inch white line follower (faster response).
+        // I do not get the type definition unless I list it.
+        import { TheBlueAlliance } from "./modules/tbascout.js";
 
-        Endgame
-        climb method. (piston, reuse intake as travel motor, travel motor, broken ankle, Dukes of Hazard).
-        H1 (3 points), H2 (6 points), H3 (12 points).
-        time needed to climb. (also gives assessment of reliability if they waffle)
-        P{climb}
-        Lift others?
-    </pre>
+        // Open The Blue Alliance
 
-    <h2>Match Scouting</h2>
-    <p>
-        Match scouting shows the robot in action, so the robot's abilities should be more apparent.
-        If it is catatonic, that's a clear problem.
-        If it cannot score or takes a long time to score, that's a problem.
-        If it starts dropping game pieces, that is a problem.
-        One could view match scouting as updating the pit scouting with more accurate information.
-    </p>
-    <p>
-        Other tactical or strategic information may come out.
-        A robot may have a method of defense that is particularly effective.
-        During Power Up, hitting the hind quarter of the robot just as it was about to deliver a power cube was effective.
-        Instead of blocking, sometimes just getting in the way was good defense.
-        Pinning robots at their alliance wall was also effective; it would take the pinned robot several seconds to recover, and
-        once it had recovered, the defender could reexecute a pin.
-        Such observations are general; they need not apply to a specific team.
-        It might be good to choose a team that defends well, but almost any team can use good tactics.
-    </p>
-    <p>
-        Some match scouting may be done by FIRST.
-        It looks like the match report has enough information to determine that R1 of the Blue Alliance
-        left the HAB during sandstorm and climbed to level 2 during endgame.
-        If that is the case, then obtain those statistics from FIRST rather than entering them.
-    </p>
-
-    <h2>Application Programming Interfaces</h2>
-    <p>
-        There are APIs for both FRC and FTC.
-    </p>
-    <p>
-        A technical issue is how to secure the passwords used by the various APIs.
-        The passwords should not be visible in the source.
-        A good way to do this for a client-side program is not clear.
-        Cookies are possible, and local storage is also possible.
-        However, development can be trouble.
-        I do not see <code>localhost</code> maintaining local storage
-        across browser starts.
-        Server side is simpler.
-    </p>
-    <p>
-        Some hacks to implement:
-    </p>
-    <ul>
-        <li>Check all games and find highest non-penalty score</li>
-        <li>check all games and find most power cells scored</li>
-        <li>For my event, check all teams and find how they did in previous events</li>
-    </ul>
-
-    <h3>Field Management System</h3>
-    <p>
-        During FIRST Events, the field keeps track of many scoring details such as counting balls
-        or deterining the tilt of beams.
-        Referees are also entering data such as whether a robot moved enough during autonomous or fouled.
-    </p>
-    <p>
-        I am seeing a lot of bad data.
-        Usually it is a small number of matches, but 2022 Arizona North is a mess.
-        qm15, qm16, qm18, qm22, qm26, qm29, qm40, qm41, qm46, qm47, qm48, qm49, qm50, qm51, qm52, qm53, qm54, qm55,
-        qm56, qm57, qm58, qm59, qm60, qm61, qm62, qm63, qm64.
-        See <a href="https://www.thebluealliance.com/match/2022azfl_qm50">TBA 2022azfl_qm50</a> and
-        <a href="https://frc-events.firstinspires.org/2022/AZFL/qualifications/50">FI AZFL/qualifications/50</a>.
-        During teleop, red alliance scored 5 lower cargo and 2 upper for 10 points; that should be nine points.
-        Is one of the lower cargo being scored as two points (a late autononmous)?
-    </p>
-    <p>
-        More typically, the bad data matches have cargo counts of zero.
-        Heuneme Port Regional qm15 (I think this was an adjustment).
-        Ventura County Regional qm25, qm32.
-    </p>
-
-    <h3>The FIRST API</h3>
-    <p>
-        FIRST has a interface to obtain match information.
-        See <a href="https://frc-events.firstinspires.org/services/API">https://frc-events.firstinspires.org/services/API</a>.
-        See <a href="https://frcevents2.docs.apiary.io/">https://frcevents2.docs.apiary.io/</a>.
-        The data may be returned as either <code>application/xml</code> or <code>application/json</code>.
-        There is a mock server that does not do validation.
-        FIRST has stopped using Apiary, so all of this must be revisited.
-    </p>
-    <p>
-        <a href="https://frc-api-docs.firstinspires.org/">frc-api-docs.firstinspires.org</a>
-    </p>
-    <p>
-        The <code>Last-Modified</code> and <code>If-Modified-Since</code> headers woul be handled by the caching system.
-        There are better methods now.
-        Some APIs doe not provide reasonable maximum age for cached objects.
-    </p>
-    <p>
-        An <code>Authorization</code> header is needed.
-        <code>Authorization: Basic 000000000000000000000000000000000000000000000000000000000000</code>
-        Where the zeros are <code>username:authorizationKey</code>,
-        (e.g., <code>sampleuser:7eaa6338-a097-4221-ac04-b6120fcc4d49</code>)
-        but the whole mess is Base64 encoded to get:
-    </p>
-    <p>
-        <code>Authorization: Basic c2FtcGxldXNlcjo3ZWFhNjMzOC1hMDk3LTQyMjEtYWMwNC1iNjEyMGZjYzRkNDk=</code>
-    </p>
-    <p><code id="testbtoa">FAILED!</code></p>
-    <p>
-        To use the API, do
-        <code>xhr.setRequestHeader("Authorization", "Basic " + btoa(str));</code>.
-    </p>
-    <button type="button" onclick="foo()">Try a read</button>
-    <p>
-        A read from a <code>file:</code> runs into CORS.
-        The request uses origin null, so the request dies.
-        It worked from a server, but now a real key is needed.
-    </p>
-    <p>
-        FIRST no longer uses Apiary.
-        The API now has a version 3.
-    </p>
-
-    <script>
-        testbtoa.textContent = "Authorization: Basic " + btoa("sampleuser:7eaa6338-a097-4221-ac04-b6120fcc4d49");
-
-        function foo() {
-            // authorization information
-            var userAPI = "sampleuser";
-            var keyAPI = "7eaa6338-a097-4221-ac04-b6120fcc4d49";
-
-            // make a new request
-            var xhr = new XMLHttpRequest();
-            var url = new URL("https://frc-api.firstinspires.org/");
-
-            // use the mock server
-            url = new URL("https://private-anon-84ec3797bf-frcevents2.apiary-mock.com/v2.0/2020/alliances/CPCMO");
-
-            xhr.responseType = "json";
-            xhr.onerror = function (e) {
-                console.log("ERROR");
-                console.log(e);
-            }
-            xhr.onload = function () {
-                console.log("finished");
-                console.log(xhr.response);
-            }
-
-            xhr.open("GET", url);
-
-            // headers are set after .open()
-            //   I presume they are encrypted for https....
-            // authorization
-            xhr.setRequestHeader("Authorization", "Basic " + btoa(userAPI + ":" + keyAPI));
-            // I need to set this to get JSON
-            xhr.setRequestHeader("Accept", "application/json");
-
-            // send the request...
-            xhr.send();
-        }
-    </script>
-
-    <h3>The Blue Alliance API</h3>
-    <p>
-        The Blue Alliance offers an APIv3 to access team, event, and match information.
-        <a href="https://www.thebluealliance.com/apidocs/v3">The Blue Alliance APIv3</a>.
-        <a href="https://blog.thebluealliance.com/2017/11/10/tech-talk-efficiently-querying-the-tba-api/">
-            Tech Talk: Efficiently Querying the TBA API
-        </a>: Set the <code>X-TBA-Auth-Key: AUTH_KEY_GOES_HERE</code> header rather than the query string
-        so the cache will hit with the URL.
-        Somewhere there should be a flag that says do not cache;
-        see <a href="https://blog.httpwatch.com/2011/01/28/top-7-myths-about-https/">Top 7 Myths about HTTPS</a>.
-    </p>
-    <dl>
-        <dt>/events/{year}</dt>
-        <dd>array of events with detailed information</dd>
-        <dt>/event/{eventkey}/teams</dt>
-        <dd>2018casf array of objects with key:{team}</dd>
-        <dt>/team/{teamkey}/events</dt>
-        <dd>frc972 array of objects with year: week:</dd>
-        <dt>/event/{eventkey}/matches</dt>
-        <dd>array of objects with actualtime: key: comp_level: match_number: </dd>
-        <dt>/event/{eventkey}/oprs</dt>
-        <dd>object oprs: {teamkey: opr} </dd>
-    </dl>
-
-    <h2>Regression</h2>
-    <p>
-        Infer abilities.
-        The match data identifies members of the alliance and scoring values
-        for team1, team2, and team3.
-        Is that mapping 1-to-1?
-        That would give us absolute data on autonomous movement and endgame climb.
-        CalGames 2021 with Funky Monkeys might give insight.
-        Also the scoring (phone call - lost train of thought).
-    </p>
-    <p>
-        What is a good way to handle secret keys?
-        Environment data?
-        Put it in the server data?
-        Put in a cookie?
-        <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API">Web Storage API</a>.
-    </p>
-    <p>
-        Find good way to handle year-specific match data.
-    </p>
-
-    <h2>References</h2>
-    <p>
-        <a href="https://arxiv.org/pdf/1810.05763.pdf">
-            Estimating Robot Strengths with Application to Selection of Alliance Members in FIRST Robotics Competitions
-        </a>
-        Alejandro Lim, Chin-Tsang Chiang, Jen-Chieh Teng, November 30, 2018.
-        Discusses mathematical metrics.
-    </p>
-
-    <h2>Form</h2>
-    <form>
-        <fieldset>
-            <legend>Event</legend>
-            <label>
-                Year:
-                <select id="yearEvent" type="text" value="2019" onchange="yearChange(this)">
-                    <option value="2010">2010 Breakaway</option>
-                    <option value="2011">2011 Logo Motion</option>
-                    <option value="2012">2012 Rebound Rumble</option>
-                    <option value="2013">2013 Ultimate Ascent</option>
-                    <option value="2014">2014 Aerial Assist</option>
-                    <option value="2015">2015 Recycle Rush</option>
-                    <option value="2016">2016 FIRST Stronghold</option>
-                    <option value="2017">2017 FIRST Steamworks</option>
-                    <option value="2018">2018 FIRST Power Up</option>
-                    <option value="2019">2019 Destination: Deep Space</option>
-                    <option value="2020">2020 Infinite Recharge</option>
-                    <option value="2021">2021 Infinite Recharge (2021)</option>
-                    <option value="2022" selected>2022 Rapid React</option>
-                    <option value="2023">2023</option>
-                </select>
-            </label><br />
-            <label>Event: <select id="selEvent" onchange="eventChange(this)"></select></label><br />
-            <label>Week: <input id="weekEvent" type="text" size="4" readonly /></label>
-            <label>Start: <input id="dateEventStart" type="date" readonly /></label><br />
-            <label>Location: <input id="locationName" type="text" size="64" readonly /></label><br />
-            <label>Location: <input id="locationEvent" type="text" size="64" readonly /></label>
-        </fieldset>
-        <fieldset>
-            <legend>API Key</legend>
-            <label>TBA key: <input id="inputKeyTBA" type="text" size="64" autocomplete="on"/></label>
-        </fieldset>
-    </form>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Team</th>
-                <th>Nickname</th>
-                <th>City</th>
-                <th>State</th>
-            </tr>
-        </thead>
-        <tbody id="teamTable">
-        </tbody>
-    </table>
-
-    <p>
-        Here we could have the 8 alliances.
-        Double clicking an entry in the table below should add to the next available alliance and remove from
-        the table of available teams.
-        I should be able to do an undo a selection. Maybe repeatedly.
-        In addition, the foot of the table should sum the parameters.
-        After the alliances are selected, we could automatically fill the table.
-    </p>
-
-    <h2>Team Rankings</h2>
-    <p>
-        Teams and their rankings.
-    </p>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Team</th>
-                <th><abbr title="Offensive Power Rating" onclick="tsort(1)">OPR</abbr></th>
-                <th><abbr title="Defensive Power Rating" onclick="tsort(2)">DPR</abbr></th>
-                <th><abbr title="Calculated Contribution to the Winning Margin" onclick="tsort(3)">CCWM</abbr></th>
-            </tr>
-        </thead>
-        <tbody id="opr">
-        </tbody>
-    </table>
-
-    <h2>Team View</h2>
-    <p>
-        Trying to give more detailed summary of performance.
-    </p>
-    <button type="button" onclick="fillVision()">Fill Table</button>
-    <table id="tableVision">
-        <caption>Team Performance Summary</caption>
-        <thead>
-            <tr><th>Team</th><th>Number</th><th colspan="11">Match Data</th></tr>
-        </thead>
-    </table>
-
-    <h2>Matches</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Match</th>
-                <th>Blue</th>
-                <th>Red</th>
-                <th>Winner</th>
-            </tr>
-        </thead>
-        <tbody id="matchTable" onclick="matchClick(this)">
-        </tbody>
-    </table>
-
-    <h2>Match Information</h2>
-    <p>
-        Clicking on an above match should provide the detail here.
-        This section could also be a live update.
-    </p>
-
-    <h3>Heat Map</h3>
-    <p>
-        Tried getting heat map data from 2019 SVR (2019casj), but just got a null.
-        OK, 2019 off season Chezy Champs (2019cc) has heat maps.
-        There are 1521 points in qualifying match 1.
-    </p>
-    <button type="button" onclick="getHeatMap()">Get Heat Map</button>
-
-    <script type="text/javascript">
-
-        // clean up the types
         /**
-         * Enum String test
-         * @readonly
-         * @enum {string}
+         * (Secret) X-TBA-Auth-Key for The Blue Alliance API
+         * @type {string}
          */
-        const EnumAlliance = {
-            BLUE: "blue",
-            RED: "red"
-        };
+        var keyTBA = "frUuCb9Hh2GZ3D2mDFRlXOtk855gh2MtNyjoNx5OyT7xltEYyDQLqW4oQFcZKghH";
 
-        /** silly Alliance test
-         * @returns {EnumAlliance}
-         * */
-        function fooAlly() {
-            return EnumAlliance.BLUE;
-        }
-
-        /** Test Intellisense completion...
-         * @param {Team} team - the team
-         * @param {District} district - the district
-         * @param {FirstEvent} event - the FRC event
-         * @param {Match_Score_Breakdown_2020} msbd - the match score breakdown
-         */
-        function fooTest(team, district, event, msbd) {
-            // These variables are not used except to test for Intellisense completion....
-
-            team;
-            district;
-            event;
-            msbd;
-        }
-
-        // X-TBA-Auth-Key
-        /** @type {string} key for The Blue Alliance */
-        var keyTBA = "";
-        /** @type {string} base URL for the Blue Alliance */
-        var urlBase = "https://www.thebluealliance.com/api/v3";
-
-        // try local storage: key, setItem, getItem, removeItem, clear
+        // try local storage: key(), setItem(), getItem(), removeItem(), clear()
+        inputKeyTBA.value = keyTBA;
         inputKeyTBA.addEventListener("change", (event) => { localStorage.setItem("keyTBA", inputKeyTBA.value); });
         if (localStorage.getItem("keyTBA")) {
             keyTBA = localStorage.getItem("keyTBA");
         }
 
+        /** Class that handles queries to The Blue Alliance. */
+        var tba = new TheBlueAlliance(keyTBA);
+
+        // clean up the types
+
         // TODO: I can get the year with yearEvent.value
 
-        /** @type {Object.<string,FirstEvent>} keeps all the events for a given year. Maps event key to event */
-        var objEvents = null;
+        /**
+         * All the events for a given year.
+         * Dictionary maps event_key to a FirstEvent.
+         * @type {Object.<string,FirstEvent>}
+         */
+        var objEvents = {};
 
         // TODO: I can get the selected event with selEvent.value
 
-        // Dictionary: teamKey to Team
-        // This data does not change often (only when teams add or drop out)
-        /** @type {Object.<string,Team>} teams at the current event */
+        /**
+         * Teams at the current event.
+         * Dictionary: team_key to Team.
+         * Team data does not change often.
+         * @type {Object.<string,Team>}
+         */
         var objTeams = null;
 
-        // I get this array and then sort it to make better sense
-        // This array needs updating after new matches
-        /** @type {Match[]} Match data */
+        /**
+         * Match data
+         * This array is sorted to make better sense.
+         * This array needs updating after matches are played.
+         * @type {Match[]}
+         */
         var matchData = [];
 
-        /** @type {Object} OPR data */
-        // This needs updating after new matches
+        /**
+         *  OPR data for the teams
+         *  OPR data changes while matches are played.
+         *  @type {Object}
+         */
         var oprData = {};
 
-        /** bubble sort table by iCol number
-        * @param {number} iCol
-        */
+        // #region Manage the tabs
+
+        /**
+         * Handle a click on a tab.
+         * Make this cleaner - take the tab element which will have an id (e.g., "tabXXXX").
+         * Calculate the id of the content (e.g., "divXXXX").
+         * @param {MouseEvent} evt - the click event
+         * @param {string} tabName - the tab to activate
+         */
+        function openTab(evt, tabName) {
+            var i;
+
+            // Get all elements with class="tabcontent" and hide them
+            var tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            var tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active")
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.classList.add("active")
+        }
+
+        /**
+         * Handle a click on a tab.
+         * @param {MouseEvent} evt
+         */
+        function tabClick(evt) {
+            // the tab that was clicked
+            var tab = evt.currentTarget;
+            // the id of the tab (e.g., "tabXXXX")
+            var idTab = tab.id;
+            // the id of the content to display (e.g., "divXXXX")
+            var idCnt = idTab.replace("tab", "div");
+
+            // for now, just fake it
+            openTab(evt, idCnt);
+        }
+
+        // put click listeners on the tabs
+        // each tab will be in the class "tablinks"
+        //   on each of those, put a method that uses data-div attribute to find the division to display
+        //   or replace "tab" with "div": tabEvent -> divEvent
+        (function () {
+            // get all the tabs
+            var tabs = document.getElementsByClassName("tablinks");
+
+            for (var i = 0; i < tabs.length; i++) {
+                // get the tab
+                var tab = tabs[i];
+
+                // add a click listener
+                tab.addEventListener("click", tabClick);
+            }
+        })();
+
+        // Set a default page
+        // this is not an attractive way of doing the selection
+        document.getElementById("tabEvent").click();
+
+        // #endregion
+
+        // Manage the tab contents
+
+        // TODO: use a sort method instead of bubble sort.
+        /**
+         * bubble sort table by iCol number
+         * @param {number} iCol
+         */
         function tsort(iCol) {
             "use strict";
 
@@ -578,29 +524,122 @@
             }
         }
 
-        /** Get the events for a particular year and put them into a select element
+        // #region Manage Event Selection tab content
+
+        // yearEvent
+        //   changes the year
+        //   clear all tables (could use a class to identify these)
+        //   loadEvents() to get a new list of events
+        yearEvent.addEventListener("change", yearChange);
+
+        /**
+         * Process a change in the year
+         * @param {Event} event
+         * @returns {null}
+         */
+        function yearChange(event) {
+            // load the events for a particular year; the year will be in the form
+            console.log(event);
+            var element = event.originalTarget;
+            console.log(element);
+            loadEvents();
+        }
+
+        // weekEvent
+        // If the user changes the week, then update the available events
+        weekEvent.addEventListener("change", weekChange);
+
+        /**
+        * Handle an HTML change event that changes the week
+        * @param {Event} el - the Event that caused the change
+        */
+        function weekChange(el) {
+            console.log("weekChange");
+            console.log(el);
+            // filter the events in selEvent
+
+            // first empty them
+            while (selEvent.firstChild) {
+                selEvent.removeChild(selEvent.firstChild);
+            }
+
+            // now load the events for that week
+            // A number: -1 means all, -2 means null
+            var week = parseInt(weekEvent.value);
+            console.log(week);
+            for (var key in objEvents) {
+                /** @type {FirstEvent} */
+                var event = objEvents[key];
+
+                if ((week == -2 && event.week == null) || week == -1 || event.week == week) {
+                    var opt = document.createElement("option");
+                    opt.value = key;
+                    opt.textContent = event.name;
+
+                    selEvent.appendChild(opt);
+                }
+            }
+        }
+
+        // selEvent
+        //   load teams
+        //   load oprs (may be empty)
+        //   load matches (may be empty)
+        selEvent.addEventListener("change", eventChange);
+
+        /**
+         * Update the form when an event changes
+         * @param {Event} event
+         * @returns {null}
+         */
+        function eventChange(event) {
+            /** @type {HTMLElement} */
+            var el = event.target;
+
+            // get the event key from the select element
+            var keyEvent = el.value;
+            console.log(keyEvent);
+
+            // that should guarantee we can access the event (modulo timing issues)
+            var objEvent = objEvents[keyEvent];
+
+            // fill in some form information about the new event
+            // TODO: weekEvent is now a select!
+            // if week is a 0 to 6, OK. If null, then use -2.
+            weekEvent.value = objEvent.week;
+            dateEventStart.value = objEvent.start_date;
+            locationName.value = objEvent.location_name;
+            locationEvent.value = objEvent.address;
+
+            // load the teams
+            loadTeams(keyEvent);
+
+            // FRC event changed, so load the team performance figures...
+            fillOPRTable(keyEvent);
+
+            // load the matches
+            loadMatches(keyEvent);
+        }
+
+        /**
+         * Get the events for a particular year and put them into a select element
          * @returns {null}
          */
         function loadEvents() {
-            "use strict";
+            // promise for the REST query
+            var promise = tba.query("events/" + yearEvent.value);
 
-            // Create an HTTP request
-            var xhr = new XMLHttpRequest();
-
-            xhr.onerror = function () {
-                console.log("error loading Events");
-            }
-            xhr.onload = function () {
-                "use strict";
-
+            // after the query is done, fill in the form
+            promise.then((value) => {
                 // the result is an array of FirstEvent
                 /** @type {Array.<FirstEvent>} Array of all of the events */
-                var aEvents = xhr.response;
+                var aEvents = value;
 
                 // sort the events
                 aEvents.sort((x, y) => { return x.name.localeCompare(y.name); });
 
-                // should squirrel the FirstEvent data into an object by key
+                // squirrel the FirstEvent data into an object by key
+                // clear the array
                 objEvents = {};
 
                 // clear the current selection list
@@ -609,9 +648,7 @@
                 }
 
                 // process each event
-                aEvents.forEach(function (evt) {
-                    "use strict";
-
+                aEvents.forEach((evt) => {
                     // build an option for the select element
                     var opt = document.createElement("option");
 
@@ -621,202 +658,169 @@
                     // opt.textContent = evt.week + " " + evt.name;
                     opt.textContent = evt.name;
 
-                    // save the rvent in the global dictionary
+                    // save the event in the global dictionary
                     // we do not expect events to change anytime soon.
                     objEvents[evt.key] = evt;
 
                     // add the option to the select list
                     selEvent.appendChild(opt);
-                })
-            }
-
-            // open the request
-            // build the URL
-            xhr.open("GET", urlBase + "/events/" + yearEvent.value);
-            // set the authorization key
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-            // send the request
-            xhr.send();
+                });
+            });
         }
 
-        /** Get the teams at a particular event
-          * @returns {null}
-          */
+        loadEvents();
+
+        // #endregion
+
+        // #region Manage the Teams tab content
+
+        /**
+         * Get the teams at a particular event.
+         * Then fill in the global team dictionary.
+         * @returns {null}
+         */
         function loadTeams(keyEvent) {
-            "use strict";
+            // a promise for the REST query
+            var promise = tba.query("event/" + keyEvent + "/teams");
 
-            // create a new HTTP request
-            var xhr = new XMLHttpRequest();
-
-            xhr.onerror = function () {
-                console.log("error loading Events");
-            }
-            xhr.onload = function () {
-                "use strict";
-
+            promise.then((value) => {
                 // the result is an array of teams
-                /** @type {Array} Array of Team objects */
-                var aTeams = xhr.response;
+                /**
+                 * Array of Team objects
+                 * @type {Array.<Team>}
+                 */
+                var aTeams = value;
 
-                console.log("teams");
-                console.log(xhr.getResponseHeader("Last-Modified"));
-                console.log(xhr.getResponseHeader("max-age"));
-                console.log(xhr.getAllResponseHeaders());
-
-                // sort the teams
+                // sort the teams by number
                 aTeams.sort((x, y) => { return x.team_number - y.team_number; });
 
                 // squirrel the event data into an object by key
                 objTeams = {};
 
-                // empty the table
+                // empty the teamTable
                 while (teamTable.firstChild) teamTable.removeChild(teamTable.firstChild);
 
                 // process each team
                 aTeams.forEach(function (team) {
-                    "use strict";
-
+                    // store the team in the dictionary
                     objTeams[team.key] = team;
 
-                    var tr = document.createElement("tr");
-
-                    var td = document.createElement("td");
-                    td.textContent = team.team_number;
-                    tr.appendChild(td);
-
-                    td = document.createElement("td");
-                    td.textContent = team.nickname; //  + team.school_name;
-                    tr.appendChild(td);
-
-                    td = document.createElement("td");
-                    td.textContent = team.city;
-                    tr.appendChild(td);
-
-                    td = document.createElement("td");
-                    td.textContent = team.state_prov;
-                    tr.appendChild(td);
-
+                    // add a row to the teamTable
+                    var tr = teamTable.insertRow();
+                    tr.insertCell().textContent = team.team_number;
+                    tr.insertCell().textContent = team.nickname; //  + team.school_name;
+                    tr.insertCell().textContent = team.city;
+                    tr.insertCell().textContent = team.state_prov;
                     // find earlier events this team was in and its rank/OPR
+                });
+            });
 
-                    teamTable.appendChild(tr);
-                })
-            }
-
-            // open the request
-            xhr.open("GET", urlBase + "/event/" + keyEvent + "/teams");
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-            xhr.send();
+            return promise;
         }
 
-        /** fill OPR table from event name
+        // #endregion
+
+        // #region Manage the OPR tab content
+
+        /**
+         * Fill the OPR table from event key
          * @param {string} strEvent
          * @returns {null}
          */
-        function scrapeIt(strEvent) {
-            "use strict";
+        function fillOPRTable(strEvent) {
+            // execute the REST query asynchronously
+            var promise = tba.query("event/" + strEvent + "/oprs");
 
-            // make a new HTTP request
-            var xhr = new XMLHttpRequest();
+            // after the query, fill in the oprData
+            promise.then((value) => {
+                // save the OPR data
+                oprData = value;
 
-            xhr.onerror = function () {
-                console.log("error loading");
-                console.log(xhr.responseType);
-            }
-            xhr.onload = function () {
-                // console.log("document loaded");
-                // console.log(xhr.getAllResponseHeaders());
-                // console.log(xhr.responseType);
-                // console.log(xhr.responseText);
-
-                /** @type {Object} OPR data */
-                oprData = xhr.response;
-
-                console.log("opr");
-                console.log(xhr.getResponseHeader("Last-Modified"));
-                console.log(xhr.getResponseHeader("max-age"));
-                console.log(xhr.getAllResponseHeaders());
-
-                console.log(oprData);
-
-                /* clear the table */
+                // clear the opr table
                 while (opr.childElementCount > 0) {
                     opr.deleteRow(0);
                 }
 
-                // fill in the table (OPR data may not exist yet)
+                // fill in the table (OPR data may not exist yet -- no matches may have been played)
                 if (oprData) {
+                    // prop is the team key
                     for (var prop in oprData.oprs) {
+                        // TODO: this has asynchronous problems.
+                        // get the team info
+                        var team = objTeams[prop];
                         var tr = document.createElement("tr");
-                        var td1 = document.createElement("td");
-                        var td2 = document.createElement("td");
-                        var td3 = document.createElement("td");
-                        var td4 = document.createElement("td");
 
-                        td1.textContent = prop;
-                        td2.textContent = Number(oprData.oprs[prop]).toFixed(2);
-                        td3.textContent = Number(oprData.dprs[prop]).toFixed(2);
-                        td4.textContent = Number(oprData.ccwms[prop]).toFixed(2);
-
-                        tr.appendChild(td1);
-                        tr.appendChild(td2);
-                        tr.appendChild(td3);
-                        tr.appendChild(td4);
+                        tr.insertCell().textContent = prop; // team.team_number;
+                        tr.insertCell().textContent = "team name"; // team.nickname;
+                        tr.insertCell().textContent = Number(oprData.oprs[prop]).toFixed(2);
+                        tr.insertCell().textContent = Number(oprData.dprs[prop]).toFixed(2);
+                        tr.insertCell().textContent = Number(oprData.ccwms[prop]).toFixed(2);
 
                         opr.appendChild(tr);
                     }
                 }
-            }
+            });
 
-            xhr.open("GET", urlBase + "/event/" + strEvent + "/oprs");
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-            xhr.send();
+            return promise;
         }
 
-        /** fill Matches table from event name
+        // OPR table sorting
+        theadOPR.addEventListener("click", sortOPR);
+
+        /**
+         * Sort the OPR table.
+         * Notice click event on the table header
+         * @param {Event} event
+         */
+        function sortOPR(event) {
+            /** @type {HTMLTableHeaderCellElement} */
+            var colElement = event.originalTarget;
+
+            // if the th element has a "data-col" attribute
+            if (colElement && colElement.hasAttribute("data-col")) {
+                // get the column number
+                var col = parseInt(colElement.dataset.col);
+
+                // console.log(col);
+
+                // and sort that column
+                tsort(col);
+            }
+        }
+
+        // #endregion
+
+        // #region Manage the Matches tab content
+
+        /**
+         * Fill Matches table from event name
          * @param {string} strEvent - the event key (e.g., 2016nytr)
          * @returns {null}
          */
         function loadMatches(strEvent) {
-            "use strict";
+            // make the REST query
+            var promise = tba.query("event/" + strEvent + "/matches");
 
-            // new HTTP request
-            var xhr = new XMLHttpRequest();
-
-            xhr.onerror = function () {
-                console.log("error loading matches");
-            }
-            xhr.onload = function () {
-                // console.log("matches loaded");
-                // console.log(xhr.getAllResponseHeaders());
-                // console.log(xhr.responseType);
-                // console.log(xhr.responseText);
-
-                /** @type {Array.<Match>} OPR data */
-                matchData = xhr.response;
-
-                console.log("matchData");
-                console.log(xhr.getResponseHeader("Last-Modified"));
-                console.log(xhr.getResponseHeader("max-age"));
-                console.log(xhr.getAllResponseHeaders());
+            // after the data arrives, sort the match data and fill it in
+            promise.then((value) => {
+                // save the match data globally
+                matchData = value;
 
                 /**
-                 * calculate a sort weight
-                 * @param {Match} m
-                 * @return {integer} sort weight
-                 */
+                * calculate a sort weight
+                * @param {Match} m
+                * @return {integer} sort weight
+                */
                 function sortval(m) {
                     // default weight is the match number
                     var w = m.match_number;
 
-                    if (m.set_number) w += 100 * m.set_number;
+                    if (m.set_number) w += 200 * m.set_number;
 
                     switch (m.comp_level) {
-                        case "f": w += 2000; break;
-                        case "sf": w += 1500; break;
-                        case "qf": w += 1000; break;
+                        case "f": w += 30000; break;
+                        case "sf": w += 20000; break;
+                        case "qf": w += 10000; break;
                         case "qm":
                         default:
                             break;
@@ -834,86 +838,27 @@
                     return xval - yval;
                 });
 
-
-                console.log(matchData);
-
-                // clear the table
+                // clear the matchTable
                 while (matchTable.childElementCount > 0) {
                     matchTable.deleteRow(0);
                 }
 
-                // fill in the table
-                var i;
-                for (i = 0; i < matchData.length; i += 1) {
-                    var m = matchData[i];
-                    var tr = document.createElement("tr");
+                console.log(matchData);
 
-                    var td1 = document.createElement("td");
-                    var td2 = document.createElement("td");
-                    var td3 = document.createElement("td");
-                    var td4 = document.createElement("td");
+                // fill in the matchTable from the matchData
+                matchData.forEach((m) => {
+                    var tr = matchTable.insertRow();
 
-                    td1.textContent = m.key;
-                    td2.textContent = m.alliances.blue.team_keys + "=" + m.alliances.blue.score;
-                    td3.textContent = m.alliances.red.team_keys + "=" + m.alliances.red.score;
-                    td4.textContent = m.winning_alliance;
+                    tr.insertCell().textContent = m.key;
+                    tr.insertCell().textContent = m.alliances.blue.team_keys + "=" + m.alliances.blue.score;
+                    tr.insertCell().textContent = m.alliances.red.team_keys + "=" + m.alliances.red.score;
+                    tr.insertCell().textContent = m.winning_alliance;
+                });
+            });
+        };
 
-                    tr.appendChild(td1);
-                    tr.appendChild(td2);
-                    tr.appendChild(td3);
-                    tr.appendChild(td4);
-
-                    matchTable.appendChild(tr);
-                }
-            }
-
-            // get all the matches from the event
-            xhr.open("GET", urlBase + "/event/" + strEvent + "/matches");
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-
-            // start the request
-            xhr.send();
-        }
-
-        /** Process a change in the year
-          * @param {HTMLElement} el
-          * @returns {null}
-          */
-        function yearChange(el) {
-            // load the events for a particular year; the year will be in the form
-            loadEvents();
-        }
-
-        /** Update the form when an event changes
-         * @param {HTMLElement} el
-         * @returns {null}
-         */
-        function eventChange(el) {
-            "use strict";
-
-            // get the event key from the select element
-            var keyEvent = el.value;
-
-            // that should guarantee we can access the event (modulo timing issues)
-            var objEvent = objEvents[keyEvent];
-
-            // fill in some form information about the new event
-            weekEvent.value = objEvent.week;
-            dateEventStart.value = objEvent.start_date;
-            locationName.value = objEvent.location_name;
-            locationEvent.value = objEvent.address;
-
-            // load the teams
-            loadTeams(keyEvent);
-
-            // FRC event changed, so load the team performance figures...
-            scrapeIt(keyEvent);
-
-            // load the matches
-            loadMatches(keyEvent);
-        }
-
+        // TODO: should be a routine for adding FirstEvents to select element
+        // TODO: after reloading the events, should clear the page
 
         // Hey! I've already fetched the matches, so I have the score breakdown.
         // I can just search the matches for the match that I want.
@@ -921,37 +866,32 @@
         // If I'm trying to examine a teams performance, then I should grab matches and wander down all of them.
         // So if teamX was in red alliance, then look at red breakdown for that robot.
         function matchLoad(keyMatch) {
-            "use strict";
+            /** @type Promise.<Match> */
+            var promiseMatch = tba.query("match/" + keyMatch);
 
-            /** @type {XMLHttpRequest} html request */
-            var xhr = new XMLHttpRequest();
-
-            xhr.onerror = function () {
-                console.log("error loading match");
-            }
-            xhr.onload = function () {
-                // console.log("matches loaded");
-                // console.log(xhr.getAllResponseHeaders());
-
-                /** @type {Array.<Match>} match data */
-                var matchData = xhr.response;
-
-                console.log(matchData);
-                console.log(matchData.score_breakdown.blue);
-                console.log(matchData.score_breakdown.red);
-            }
-
-            xhr.open("GET", urlBase + "/match/" + keyMatch);
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-            xhr.send();
+            promiseMatch
+                .then((matchData) => {
+                    console.log(matchData);
+                    console.log(matchData.score_breakdown.blue);
+                    console.log(matchData.score_breakdown.red);
+                })
+                .catch((reason) => {
+                    console.log("error loading match");
+                    console.log(reason);
+                });
         }
 
-        function matchClick(el) {
-            console.log(el);
+        // It is better to use document.getElementById() because it returns the correct type.
+        matchTable.addEventListener("click", matchClick);
 
-            // event is global
+        /**
+         * Clicking on a match should get more detailed inforation
+         * @param {Event} event
+         */
+        function matchClick(event) {
             console.log(event);
+            var el = event.originalTarget;
+            console.log(el);
 
             // this gives me the match key (e.g., "2019caoc_f1m1")
             console.log(event.target.parentElement.firstChild.textContent);
@@ -959,68 +899,382 @@
             matchLoad(event.target.parentElement.firstChild.textContent);
         }
 
-        /**
-         * Check score_breakdown consistency.
-         * Some score breakdowns are inconsistent.
-         * Possibly the result of a score being corrected by FIRST.
-         * @param {Match} m
-         * @param {Match_Score_Breakdown_2022_Alliance} sb
-         * @return {boolean} true if consistent
-         */
-        function checkMatchConsistency(m, sb) {
-            // total cargo scored in lower hub during auto (2 points each)
-            var ccargoAutoLower =
-                sb.autoCargoLowerNear +
-                sb.autoCargoLowerFar +
-                sb.autoCargoLowerRed +
-                sb.autoCargoLowerBlue;
-            // total cargo scored in upper hub during auto (4 points each)
-            var ccargoAutoUpper =
-                sb.autoCargoUpperNear +
-                sb.autoCargoUpperFar +
-                sb.autoCargoUpperRed +
-                sb.autoCargoUpperBlue;
-            // total cargo scored in lower hub during teleop (1 point each)
-            var ccargoTeleopLower =
-                sb.teleopCargoLowerNear +
-                sb.teleopCargoLowerFar +
-                sb.teleopCargoLowerRed +
-                sb.teleopCargoLowerBlue;
-            // total cargo scored in upper hub during teleop (2 points each)
-            var ccargoTeleopUpper =
-                sb.teleopCargoUpperNear +
-                sb.teleopCargoUpperFar +
-                sb.teleopCargoUpperRed +
-                sb.teleopCargoUpperBlue;
+        // #endregion
 
-            // this test works...
-            if (ccargoAutoLower + ccargoAutoUpper != sb.autoCargoTotal ||
-                ccargoTeleopLower + ccargoTeleopUpper != sb.teleopCargoTotal) {
-                console.log("Bad data!");
-                console.log(m);
-                return false;
+        // #region Vision Table Content
+
+        // I want to make this more flexible.
+        // A class for each year
+        //   fTeam -> row puts in team number and team name
+        //   fHead -> row puts in the column heading (some may span multiple columns)
+        //   fMatch(match, acc) -> row puts in the match summary
+        //   fCheck(match) -> string
+        //   fSummary(acc) ->
+        //   fInit() -> new accumulation structure
+        //   N -> number of data columns
+
+        // Now things are clearer.
+        // Create a match summary for a team.
+        // It finds a list of matches the team is in
+        // then the HTML building is straightforward from the accumulated data.
+        // The super can be responsible for collecting all the match data.
+        // The subclasses can do a better job of displaying it.
+        // this.N may do the right thing.
+
+        class MatchSummary2022 {
+            /** @type {integer} number of data columns */
+            static N = 11;
+
+            /**
+             * Add the row that has the team number and team nickname
+             * @param {HTMLTableSectionElement} tb
+             * @param {Team} team
+             * @returns {HTMLTableRowElement} the row that was added
+             */
+            static fTeam(tb, team) {
+                // make the row
+                var tr0 = tb.insertRow(-1);
+
+                // make a Heading
+                var th = document.createElement("th");
+                // with the team number in it
+                th.textContent = team.team_number;
+                // and add it to the row
+                tr0.appendChild(th);
+
+                // make a data element with the team nickname
+                th = document.createElement("td");
+                th.textContent = team.nickname;
+                th.setAttribute("colspan", this.N);
+                th.classList.add("teamNickname");
+                tr0.appendChild(th);
+
+                return tr0;
             }
 
-            if (sb.autoCargoTotal + sb.teleopCargoTotal != sb.matchCargoTotal) {
-                console.log("cargoTotal wrong!");
-                console.log(m);
-                return false;
+            /**
+             * Add the row with the column headings
+             * @param {HTMLTableSectionElement} tb
+             * @returns {HTMLTableRowElement} the row that was added
+             */
+            static fHead(tb) {
+                var tr1 = tb.insertRow(-1);
+
+                // add the headings
+                var th;
+
+                // match
+                th = document.createElement("th");
+                th.textContent = "Match";
+                tr1.appendChild(th);
+
+                // alliance
+                th = document.createElement("th");
+                th.textContent = "Alliance";
+                tr1.appendChild(th);
+
+                // robot number within the alliance
+                th = document.createElement("th");
+                th.textContent = "Robot";
+                tr1.appendChild(th);
+
+                // ranking points
+                th = document.createElement("th");
+                th.textContent = "RP";
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "aAutoCargo";
+                th.title = "Total Autonomous Cargo for the whole Alliance";
+                th.colSpan = 2;
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "aTeleopCargo";
+                th.title = "Total Teleop Cargo for the whole Alliance";
+                th.colSpan = 2;
+                tr1.appendChild(th);
+
+                // taxi status
+                th = document.createElement("th");
+                th.textContent = "Taxi";
+                tr1.appendChild(th);
+
+                // endgame climb status
+                th = document.createElement("th");
+                th.textContent = "Climb";
+                tr1.appendChild(th);
+
+                // OPR
+                th = document.createElement("th");
+                th.textContent = "OPR";
+                tr1.appendChild(th);
+
+                // that finishes the header row
+                return tr1;
             }
 
-            // These trigger for 2022mndu_qm17
-            if (ccargoAutoLower * 2 + ccargoAutoUpper * 4 != sb.autoCargoPoints) {
-                console.log("autoCargoPoints wrong");
-                console.log(m);
-                return false;
-            }
-            if (ccargoTeleopLower * 1 + ccargoTeleopUpper * 2 != sb.teleopCargoPoints) {
-                console.log("teleopCargoPoints wrong");
-                console.log(m);
-                return false;
+            /**
+             * Check the consistency of a match
+             * @param match
+             * @returns {string?} reason the match is bad
+             */
+            static fCheck(match) {
+
+                return null;
             }
 
-            // looks OK
-            return true;
+            /**
+             * Initialize summary statistics
+             * TODO: make this the result of a constructor?
+             * @returns {Object} summary
+             */
+            static fInit() {
+                var acc = {};
+
+                // summary totals for average calculation
+                acc.cMatches = 0;
+                acc.sumRP = 0;
+                acc.sumAutoCargoLower = 0;
+                acc.sumAutoCargoUpper = 0;
+                acc.sumTeleopCargoLower = 0;
+                acc.sumTeleopCargoUpper = 0;
+                acc.sumTaxi = 0;
+                acc.sumClimb = 0;
+
+                return acc;
+            }
+
+            /**
+             * Build a row with match statistics
+             * @param {HTMLTableSectionElement} tb
+             * @param {MatchScoreBreakdown} match
+             * @param {Object} acc accumulated data
+             */
+            static fMatch(tb, match, acc) {
+
+            }
+
+            /**
+             * Build the summary row
+             * @param {HTMLTableSectionElement} tb
+             * @param {Object} acc
+             * @param {Team} team
+             */
+            static fSummary(tb, acc, team) {
+                var t = team.key;
+                var tr = tb.insertRow(-1);
+
+                // the Average header cell
+                var th = document.createElement("th");
+                th.textContent = "Average points";
+                // crosses the match, alliance color, and robot cols
+                th.setAttribute("colspan", 3);
+                tr.appendChild(th);
+
+                var cMatches = acc.cMatches;
+
+                // compute and report the scoring averages
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumRP / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAutoCargoLower / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAutoCargoUpper / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTeleopCargoLower / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTeleopCargoUpper / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTaxi / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumClimb / cMatches).toFixed(2);
+
+                // report the team's OPR
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : oprData.oprs[t].toFixed(2);
+
+                return tr;
+            }
+        }
+
+        class MatchSummary {
+            /** @type {integer} number of data columns */
+            static N = 11;
+
+            /**
+             * Add the row that has the team number and team nickname
+             * @param {HTMLTableSectionElement} tb
+             * @param {Team} team
+             * @returns {HTMLTableRowElement} the row that was added
+             */
+            static fTeam(tb, team) {
+                // make the row
+                var tr0 = tb.insertRow(-1);
+
+                // make a Heading
+                var th = document.createElement("th");
+                // with the team number in it
+                th.textContent = team.team_number;
+                // and add it to the row
+                tr0.appendChild(th);
+
+                // make a data element with the team nickname
+                th = document.createElement("td");
+                th.textContent = team.nickname;
+                th.setAttribute("colspan", this.N);
+                th.classList.add("teamNickname");
+                tr0.appendChild(th);
+
+                return tr0;
+            }
+
+            /**
+             * Add the row with the column headings
+             * @param {HTMLTableSectionElement} tb
+             * @returns {HTMLTableRowElement} the row that was added
+             */
+            static fHead(tb) {
+                var tr1 = tb.insertRow(-1);
+
+                // add the headings
+                var th;
+
+                // match
+                th = document.createElement("th");
+                th.textContent = "Match";
+                tr1.appendChild(th);
+
+                // alliance
+                th = document.createElement("th");
+                th.textContent = "Alliance";
+                tr1.appendChild(th);
+
+                // robot number within the alliance
+                th = document.createElement("th");
+                th.textContent = "Robot";
+                tr1.appendChild(th);
+
+                // ranking points
+                th = document.createElement("th");
+                th.textContent = "RP";
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "AutoReef";
+                th.title = "Total Autonomous Cargo for the whole Alliance";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "TeleopReef";
+                th.title = "Total Teleop Reef for the whole Alliance";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // algae processor
+                th = document.createElement("th");
+                th.textContent = "AlgaeProc";
+                th.title = "Total Algae through the processor";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // algae net
+                th = document.createElement("th");
+                th.textContent = "AlgaeNet";
+                th.title = "Total Algae in the Net";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // taxi status
+                th = document.createElement("th");
+                th.textContent = "Taxi";
+                tr1.appendChild(th);
+
+                // endgame climb status
+                th = document.createElement("th");
+                th.textContent = "Climb";
+                tr1.appendChild(th);
+
+                // OPR
+                th = document.createElement("th");
+                th.textContent = "OPR";
+                tr1.appendChild(th);
+
+                // that finishes the header row
+                return tr1;
+            }
+
+            /**
+             * Check the consistency of a match
+             * @param match
+             * @returns {string?} reason the match is bad
+             */
+            static fCheck(match) {
+
+                return null;
+            }
+
+            /**
+             * Initialize summary statistics
+             * TODO: make this the result of a constructor?
+             * @returns {Object} summary
+             */
+            static fInit() {
+                var acc = {};
+
+                // summary totals for average calculation
+                acc.cMatches = 0;
+                acc.sumRP = 0;
+                acc.sumAutoReef = 0;
+                acc.sumTeleopReef = 0;
+                acc.sumAlgaeProc = 0;
+                acc.sumAlgaeNet = 0;
+                acc.sumTaxi = 0;
+                acc.sumClimb = 0;
+
+                return acc;
+            }
+
+            /**
+             * Build a row with match statistics
+             * @param {HTMLTableSectionElement} tb
+             * @param {MatchScoreBreakdown} match
+             * @param {Object} acc accumulated data
+             */
+            static fMatch(tb, match, acc) {
+
+            }
+
+            /**
+             * Build the summary row
+             * @param {HTMLTableSectionElement} tb
+             * @param {Object} acc
+             * @param {Team} team
+             */
+            static fSummary(tb, acc, team) {
+                var t = team.key;
+                var tr = tb.insertRow(-1);
+
+                // the Average header cell
+                var th = document.createElement("th");
+                th.textContent = "Average points";
+                // crosses the match, alliance color, and robot cols
+                th.setAttribute("colspan", 3);
+                tr.appendChild(th);
+
+                var cMatches = acc.cMatches;
+
+                // compute and report the scoring averages
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumRP / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAutoReef / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTeleopReef / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAlgaeProc / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAlgaeNet / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTaxi / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumClimb / cMatches).toFixed(2);
+
+                // report the team's OPR
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : oprData.oprs[t].toFixed(2);
+
+                return tr;
+            }
         }
 
         /**
@@ -1028,87 +1282,21 @@
          * @param {Team} team - team
          * @param {HTMLTableSectionElement} tb - tbody element that gets the data
          */
-        function addTBodyTeamData(team, tb) {
-            // get the team key from the team
+        function addTBodyTeamData2022(team, tb) {
+            /** The team key */
             var t = team.key;
 
             // create the heading row
-            var tr1 = tb.insertRow(-1);
+            var tr0 = MatchSummary.fTeam(tb, team);
 
-            // add the headings
-            var th = document.createElement("th");
-            th.textContent = team.nickname;
-            tr1.appendChild(th);
-
-            th = document.createElement("th");
-            th.textContent = team.team_number;
-            tr1.appendChild(th);
-
-            // match
-            th = document.createElement("th");
-            th.textContent = "Match";
-            tr1.appendChild(th);
-
-            // alliance
-            th = document.createElement("th");
-            th.textContent = "Alliance";
-            tr1.appendChild(th);
-
-            // robot number within the alliance
-            th = document.createElement("th");
-            th.textContent = "Robot";
-            tr1.appendChild(th);
-
-            // ranking points
-            th = document.createElement("th");
-            th.textContent = "RP";
-            tr1.appendChild(th);
-
-            // match points
-            th = document.createElement("th");
-            th.textContent = "aAutoCargo";
-            th.title = "Total Autonomous Cargo for the whole Alliance";
-            th.colSpan = 2;
-            tr1.appendChild(th);
-
-            // match points
-            th = document.createElement("th");
-            th.textContent = "aTeleopCargo";
-            th.title = "Total Teleop Cargo for the whole Alliance";
-            th.colSpan = 2;
-            tr1.appendChild(th);
-
-            // taxi status
-            th = document.createElement("th");
-            th.textContent = "Taxi";
-            tr1.appendChild(th);
-
-            // endgame climb status
-            th = document.createElement("th");
-            th.textContent = "Climb";
-            tr1.appendChild(th);
-
-            // OPR
-            th = document.createElement("th");
-            th.textContent = "OPR";
-            tr1.appendChild(th);
-
-            // that finishes the header row
+            // make a second heading row
+            var tr1 = MatchSummary.fHead(tb);
 
             // Now process the match data
+            var acc = MatchSummary.fInit();
 
-            // summary totals for average calculation
-            var cMatches = 0;
-            var sumRP = 0;
-            var sumAutoCargoLower = 0;
-            var sumAutoCargoUpper = 0;
-            var sumTeleopCargoLower = 0;
-            var sumTeleopCargoUpper = 0;
-            var sumTaxi = 0;
-            var sumClimb = 0;
-
-            // look at each match
-            for (i = 0; i < matchData.length; i++) {
+            // look at each match (team may not have played the match)
+            for (var i = 0; i < matchData.length; i++) {
                 /** @type {Match} */
                 var m = matchData[i];
 
@@ -1116,28 +1304,29 @@
                 // we will only consider qualifying matches
                 // we will only consider matches that have a score breakdown
                 if (m.comp_level == "qm" && m.score_breakdown != null) {
+                    // get the alliances
                     var bA = m.alliances.blue;
                     var rA = m.alliances.red;
 
                     // alliance and team index
                     var a = null;
+                    /** robot number (0, 1, 2) */
                     var ti;
 
-                    // search the alliances for the desired team
+                    // search the red and blue alliances for the desired team
                     if ((ti = bA.team_keys.indexOf(t)) >= 0) {
-                        // console.log("found BLUE at qm " + m.match_number);
                         a = "blue";
-                    } else
-                        if ((ti = rA.team_keys.indexOf(t)) >= 0) {
-                            // console.log("found RED  at qm " + m.match_number);
-                            a = "red";
-                        }
+                    } else if ((ti = rA.team_keys.indexOf(t)) >= 0) {
+                        a = "red";
+                    }
 
-                    // if found, then add the match data
+                    // if the team played that match, then add the match data
                     if (ti >= 0) {
-                        cMatches++;
+                        acc.cMatches++;
 
-                        // TODO: score breakdown may be null if match not played
+                        // the score breakdown may be null if match not played
+                        // score breakdown guaranteed above.
+
                         // get the score breakdown for this team's alliance
                         var sb = m.score_breakdown[a];
                         // console.log(a);
@@ -1197,12 +1386,14 @@
                             sb.teleopCargoUpperRed +
                             sb.teleopCargoUpperBlue;
 
-                        // sometimes the data is inconsistent
-                        if (!checkMatchConsistency(m, sb)) {
-                            console.log("Inconsistent match");
-                            console.log(m);
+                        // sometimes the data is inconsistent, so check it
+                        var reason = tba.checkScoreBreakdown(sb);
+                        if (reason != null) {
+                            // do not continually report here
+                            // console.log("Inconsistent match: match %s, alliance %s, reason %s", m.key, a, reason);
                             // mark the data as bad
                             tr.classList.add("baddata");
+                            tr.title = reason;
                         }
 
                         // alliance auto cargo points
@@ -1212,30 +1403,40 @@
                         tr.insertCell(-1).textContent = ccargoTeleopLower;
                         tr.insertCell(-1).textContent = ccargoTeleopUpper;
 
-                        // taxi
+                        // this robot's taxi
                         tr.insertCell(-1).textContent = sb[keyTaxi];
-                        // climb
+                        // this robot's climb
                         tr.insertCell(-1).textContent = sb[keyClimb];
+
+                        // an empty cell (the OPR column)
                         tr.insertCell(-1);
 
-                        sumRP += parseInt(sb.rp);
-                        sumAutoCargoLower += ccargoAutoLower;
-                        sumAutoCargoUpper += ccargoAutoUpper;
-                        sumTeleopCargoLower += ccargoTeleopLower;
-                        sumTeleopCargoUpper += ccargoTeleopUpper;
-                        sumTaxi += (sb[keyTaxi] == "Yes") ? 2 : 0;
+                        // increment the ranking points
+                        // TODO: isn't this an int already?
+                        acc.sumRP += parseInt(sb.rp);
+
+                        // increment the cargo count totals for Auto and Teleop
+                        acc.sumAutoCargoLower += ccargoAutoLower;
+                        acc.sumAutoCargoUpper += ccargoAutoUpper;
+                        acc.sumTeleopCargoLower += ccargoTeleopLower;
+                        acc.sumTeleopCargoUpper += ccargoTeleopUpper;
+
+                        // a successful taxi is worth 2 points
+                        acc.sumTaxi += (sb[keyTaxi] == "Yes") ? 2 : 0;
+
+                        // a climb is worth 15 (Traversal), 10 (High), 6 (Mid), and 4 (Low)
                         switch (sb[keyClimb]) {
                             case "Traversal":
-                                sumClimb += 15;
+                                acc.sumClimb += 15;
                                 break;
                             case "High":
-                                sumClimb += 10;
+                                acc.sumClimb += 10;
                                 break;
                             case "Mid":
-                                sumClimb += 6;
+                                acc.sumClimb += 6;
                                 break;
                             case "Low":
-                                sumClimb += 4;
+                                acc.sumClimb += 4;
                                 break;
                             case "none":
                             default:
@@ -1246,30 +1447,247 @@
                 }
             }
 
-            // now the summary data
-            tr = tb.insertRow(-1);
-            // tr.insertCell(-1);
-            // tr.insertCell(-1);
-            th = document.createElement("th");
-            th.textContent = "Average";
-            th.setAttribute("colspan", 3);
-            tr.appendChild(th);
+            // now the summary data in its own row
+            tr = MatchSummary.fSummary(tb, acc, team);
 
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumRP / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumAutoCargoLower / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumAutoCargoUpper / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumTeleopCargoLower / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumTeleopCargoUpper / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumTaxi / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (sumClimb / cMatches).toFixed(2);
-            tr.insertCell(-1).textContent = (cMatches == 0) ? "00" : oprData.oprs[t].toFixed(2);
 
-            tr1.children[0].setAttribute("rowspan", cMatches + 2);
-            tr1.children[1].setAttribute("rowspan", cMatches + 2);
+            // set the team number column to span the number matches + header row + summary row
+            tr0.children[0].setAttribute("rowspan", acc.cMatches + 3);
         }
 
-        /** Fill the Vision table */
-        function fillVision() {
+        function countRow(row) {
+            var count = 0;
+
+            if (row.nodeA) count++;
+            if (row.nodeB) count++;
+            if (row.nodeC) count++;
+            if (row.nodeD) count++;
+            if (row.nodeE) count++;
+            if (row.nodeF) count++;
+            if (row.nodeG) count++;
+            if (row.nodeH) count++;
+            if (row.nodeI) count++;
+            if (row.nodeJ) count++;
+            if (row.nodeK) count++;
+            if (row.nodeL) count++;
+
+            return count;
+        }
+
+        /**
+         * Add the team's results to the tbody element
+         * @param {Team} team - team
+         * @param {HTMLTableSectionElement} tb - tbody element that gets the data
+         */
+        function addTBodyTeamData(team, tb) {
+            /** The team key */
+            var t = team.key;
+
+            // create the heading row
+            var tr0 = MatchSummary.fTeam(tb, team);
+
+            // make a second heading row
+            var tr1 = MatchSummary.fHead(tb);
+
+            // Now process the match data
+            var acc = MatchSummary.fInit();
+
+            // look at each match (team may not have played the match)
+            for (var i = 0; i < matchData.length; i++) {
+                /** @type {Match} */
+                var m = matchData[i];
+
+                // filter on qualifying matches
+                // we will only consider qualifying matches
+                // we will only consider matches that have a score breakdown
+                if (m.comp_level == "qm" && m.score_breakdown != null) {
+                    // get the alliances
+                    var bA = m.alliances.blue;
+                    var rA = m.alliances.red;
+
+                    // alliance and team index
+                    var a = null;
+                    /** robot number (0, 1, 2) */
+                    var ti;
+
+                    // search the red and blue alliances for the desired team
+                    if ((ti = bA.team_keys.indexOf(t)) >= 0) {
+                        a = "blue";
+                    } else if ((ti = rA.team_keys.indexOf(t)) >= 0) {
+                        a = "red";
+                    }
+
+                    // if the team played that match, then add the match data
+                    if (ti >= 0) {
+                        acc.cMatches++;
+
+                        // the score breakdown may be null if match not played
+                        // score breakdown guaranteed above.
+
+                        // get the score breakdown for this team's alliance
+                        var sb = m.score_breakdown[a];
+                        // console.log(a);
+                        // console.log(ti);
+                        // console.log(sb);
+                        // these could be lookups
+                        var keyTaxi = "autoLineRobot" + (ti + 1);
+                        var keyClimb = "endGameRobot" + (ti + 1);
+
+                        /** @type {HTMLTableRowElement} */
+                        var tr = tb.insertRow(-1);
+
+                        // get the array of videos
+                        var videos = m.videos;
+
+                        // match number
+                        var cell = tr.insertCell(-1);
+                        if (videos.length > 0 && videos[0].type == "youtube") {
+                            // insert an anchor
+                            var anchor = document.createElement("a");
+                            anchor.textContent = m.match_number;
+                            // there is a better way to handle this....
+                            anchor.href = "https://www.youtube.com/watch?v=" + videos[0].key;
+                            cell.appendChild(anchor);
+                        } else {
+                            cell.textContent = m.match_number;
+                        }
+
+                        // alliance color
+                        tr.insertCell(-1).textContent = a;
+                        // team number in alliance
+                        tr.insertCell(-1).textContent = ti + 1;
+                        // ranking points
+                        tr.insertCell(-1).textContent = sb.rp;
+
+                        // field management system keeps track of scoring.
+
+                        // sometimes the data is inconsistent, so check it
+                        // var reason = tba.checkScoreBreakdown(sb);
+                        var reason = null;
+                        if (reason != null) {
+                            // do not continually report here
+                            // console.log("Inconsistent match: match %s, alliance %s, reason %s", m.key, a, reason);
+                            // mark the data as bad
+                            tr.classList.add("baddata");
+                            tr.title = reason;
+                        }
+
+                        sb.autoReef.tba_botRow = countRow(sb.autoReef.botRow);
+                        sb.autoReef.tba_midRow = countRow(sb.autoReef.midRow);
+                        sb.autoReef.tba_topRow = countRow(sb.autoReef.topRow);
+
+                        sb.teleopReef.tba_botRow = countRow(sb.teleopReef.botRow);
+                        sb.teleopReef.tba_midRow = countRow(sb.teleopReef.midRow);
+                        sb.teleopReef.tba_topRow = countRow(sb.teleopReef.topRow);
+
+                        var autoReef =
+                            3 * sb.autoReef.trough +
+                            4 * sb.autoReef.tba_botRow +
+                            6 * sb.autoReef.tba_midRow +
+                            7 * sb.autoReef.tba_topRow;
+
+                        // this calculation looks wrong. Gives credit for Auto instead of losing it.
+                        var teleopReef =
+                            2 * Math.max(0, sb.teleopReef.trough - sb.autoReef.trough) +
+                            3 * Math.max(0, sb.teleopReef.tba_botRow - sb.autoReef.tba_botRow) +
+                            4 * Math.max(0, sb.teleopReef.tba_midRow - sb.autoReef.tba_midRow) +
+                            5 * Math.max(0, sb.teleopReef.tba_topRow - sb.autoReef.tba_topRow);
+
+                        // alliance auto coral points
+                        tr.insertCell(-1).textContent = autoReef;
+                        // alliance teleop
+                        tr.insertCell(-1).textContent = teleopReef;
+
+                        // algae through processor
+                        var algaeProc = sb.wallAlgaeCount;
+                        tr.insertCell(-1).textContent = algaeProc;
+                        var algaeNet = sb.netAlgaeCount;
+                        tr.insertCell(-1).textContent = algaeNet;
+
+                        // this robot's taxi
+                        tr.insertCell(-1).textContent = sb[keyTaxi];
+                        // this robot's climb
+                        tr.insertCell(-1).textContent = sb[keyClimb];
+
+                        // an empty cell (the OPR column)
+                        tr.insertCell(-1);
+
+                        // increment the ranking points
+                        // TODO: isn't this an int already?
+                        acc.sumRP += parseInt(sb.rp);
+
+                        // increment the coral totals for Auto and Teleop
+                        acc.sumAutoReef += autoReef;
+                        acc.sumTeleopReef += teleopReef;
+
+                        // increment algae
+                        acc.sumAlgaeProc += 6 * algaeProc;
+                        acc.sumAlgaeNet += 4 * algaeNet;
+
+                        // a successful taxi is worth 2 points
+                        acc.sumTaxi += (sb[keyTaxi] == "Yes") ? 2 : 0;
+
+                        // a climb is worth 12 (DeepCage), 6 (ShallowCage), 2 (Parked)
+                        switch (sb[keyClimb]) {
+                            case "DeepCage":
+                                acc.sumClimb += 12;
+                                break;
+                            case "ShallowCage":
+                                acc.sumClimb += 6;
+                                break;
+                            case "Parked":
+                                acc.sumClimb += 2;
+                                break;
+                            case "None":
+                                break;
+                            default:
+                                console.log("bad climb keyword: " + sb[keyClimb]);
+                                break;
+                        }
+                    }
+
+                }
+            }
+
+            // now the summary data in its own row
+            tr = MatchSummary.fSummary(tb, acc, team);
+
+
+            // set the team number column to span the number matches + header row + summary row
+            tr0.children[0].setAttribute("rowspan", acc.cMatches + 3);
+        }
+
+        fillVisionButton.addEventListener("click", fillVision);
+
+        /**
+         * Fill the Vision table.
+         * Processes an addEventListener
+         * @param {Event}
+         */
+        function fillVision(event) {
+
+            // check the match data
+            for (var i = 0; i < matchData.length; i++) {
+                /** @type {Match} */
+                var m = matchData[i];
+
+                var as = ["red", "blue"];
+
+                for (var j = 0; j < 2; j++) {
+                    var a = as[j];
+
+                    var sb = m.score_breakdown[a];
+                    // var reason = tba.checkScoreBreakdown(sb);
+                    var reason = null;
+
+                    if (reason != null) {
+                        // report the problem
+                        console.log("Inconsistent match: match %s, alliance %s, reason %s", m.key, a, reason);
+                        console.log(m);
+                    }
+                }
+            }
+
             /** @type {HTMLTableSectionElement} */
             // tableVision is the table element
             var i;
@@ -1300,49 +1718,157 @@
             });
         }
 
-        loadEvents();
+        // #endregion
 
-        // scrapeIt("2018casf");
+        // #region Heat Map Content
+
+        // Accessing heat maps
+        // heat maps are not common
+        //   no heat map at 2019 San Francisco Regional: "2019casf_qm10"
+        //   no heat map at 2019 ???: "2019arc_f1m1"
+        //   no heat map at 2022 Port Hueneme: "2022caph_qm1"
+        //   heat map at 2019 Chezy Champs: "2019cc_qm1"
+        //
+        document.getElementById("buttonHeatMap").addEventListener("click",
+            () => {
+                // ask for a match that has data
+                tba.getHeatMap("2019cc_qm1")
+                    .then((zebra) => {
+                        // console.log("heat map data");
+                        // console.log(zebra);
+
+                        // for each pair of robots
+                        for (var k = 0; k < 3; k++) {
+
+                            // start the paths with an absolute Move
+                            var pointsB1 = ["M"];
+                            var pointsR1 = ["M"];
+
+                            // for each time point
+                            for (var i = 0; i < zebra.times.length; i++) {
+                                // grab the robots' coordinates
+                                var xR = zebra.alliances.red[k].xs[i];
+                                var yR = zebra.alliances.red[k].ys[i];
+
+                                var xB = zebra.alliances.blue[k].xs[i];
+                                var yB = zebra.alliances.blue[k].ys[i];
+
+                                // if we have both coordinates, then push them onto the path
+                                if (xR != null && yR != null) {
+                                    pointsR1.push(xR);
+                                    pointsR1.push(yR);
+                                }
+
+                                if (xB != null && yB != null) {
+                                    pointsB1.push(xB);
+                                    pointsB1.push(yB);
+                                }
+                            }
+
+                            document.getElementById("robotR" + k).setAttribute("d", pointsR1.join(" "));
+                            document.getElementById("robotB" + k).setAttribute("d", pointsB1.join(" "));
+                        }
+                    })
+                    .catch((reason) => {
+                        console.log("heat map request failed");
+                        console.log(reason);
+                    });
+            }
+        );
+
+        // #endregion
+
+        // #region Mornay Content
+        buttonMornay.addEventListener("click", fillMornay);
 
         /**
-         * Get the heat map for a match.
+         * Duplicate parts of Mornay's table
+         * @param {Event} event
          */
-        function getHeatMap() {
-            // start an HTTP request
-            var xhr = new XMLHttpRequest();
-
-            xhr.onerror = function () {
-                console.log("error getHeatMap()");
+        function fillMornay(event) {
+            // empty the table data
+            while (tbodyMornay.childElementCount > 0) {
+                tbodyMornay.deleteRow(0);
             }
-            xhr.onload = function () {
-                /** @type {Zebra} heat map data */
-                var heatMapData = xhr.response;
+            // for each team
+            var keys = Object.keys(objTeams);
+            keys.forEach((k) => {
+                /** @type {Team} */
+                var team = objTeams[k];
+                // create a new row
+                var tr = tbodyMornay.insertRow();
 
-                console.log("Heat Map");
-                console.log(xhr.getResponseHeader("Last-Modified"));
-                console.log(xhr.getResponseHeader("max-age"));
-                console.log(xhr.getAllResponseHeaders());
+                // identify the team
+                var cell = tr.insertCell();
+                cell.title = team.nickname;
+                var anchor = document.createElement("a");
+                anchor.href = "https://www.stanford.edu";
+                anchor.textContent = team.team_number;
+                cell.append(anchor);
 
-                console.log(heatMapData);
-            }
+                // now find the best event
 
-            // did not find a match with a heat map
-            var strMatch = "2019casf_qm10";
-            strMatch = "2019arc_f1m1";
-            // there are tags at Chezy Champs
-            strMatch = "2019cc_qm1";
-            // no tags at Port Hueneme
-            // strMatch = "2022caph_qm1";
+                // Ranking Score
+                tr.insertCell().textContent = 3.875.toFixed(2);
 
-            xhr.open("GET", urlBase + "/match/" + strMatch + "/zebra_motionworks");
-            xhr.setRequestHeader("X-TBA-Auth-Key", keyTBA);
-            xhr.responseType = "json";
-            xhr.send();
+                // Score Avg.
+                tr.insertCell().textContent = 12.34567.toFixed(2);
 
+                // Match Avg.
+                tr.insertCell().textContent = 12.34567.toFixed(2);
+
+                // Hangar Avg. Taxi + Auto Cargo
+                tr.insertCell().textContent = 12.34567.toFixed(2);
+
+                // W - L - T
+                tr.insertCell().textContent = 8;
+                tr.insertCell().textContent = 3;
+                tr.insertCell().textContent = 1;
+
+                // DQ
+                tr.insertCell().textContent = 0;
+
+                // Played
+                tr.insertCell().textContent = "sum";
+
+                // From FirstEvent.key...
+
+                // Week FirstEvent.week
+                tr.insertCell().textContent = 3 + 1;
+
+                // Regional Name = FirstEvent.name, FirstEvent.short_name
+                tr.insertCell().textContent = "Monterey Bay Regional";
+
+                // Qualifer Ranking
+                tr.insertCell().textContent = 12;
+                // = number of teams at the event
+                tr.insertCell().textContent = 36;
+
+                // Houston
+                tr.insertCell().textContent = "n/a";
+
+                // Auto
+                //   this can be broken down into taxi / low / high
+                //   taxi is from score_breakdown
+                //   low / high would be MLR of score_breakdown
+                tr.insertCell().textContent = 12.34567.toFixed(2);
+
+                // Avg.End Game (Low, Middle, High, Traversal)
+                //   calculate from matches and score_breakdown
+                tr.insertCell().textContent = 0.34567.toFixed(2);
+                tr.insertCell().textContent = 0.34567.toFixed(2);
+                tr.insertCell().textContent = 0.34567.toFixed(2);
+                tr.insertCell().textContent = 0.34567.toFixed(2);
+
+                // OPR = Event_OPRS.oprs[team_key]
+                tr.insertCell().textContent = 12.34567.toFixed(2);
+
+            });
         }
 
-    </script>
+        // #endregion
 
+    </script>
 
 </body>
 </html>
