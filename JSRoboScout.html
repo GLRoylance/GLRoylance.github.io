@@ -1094,7 +1094,7 @@
 
         class MatchSummary {
             /** @type {integer} number of data columns */
-            static N = 11;
+            static N = 14;
 
             /**
              * Add the row that has the team number and team nickname
@@ -1154,16 +1154,37 @@
                 th.textContent = "RP";
                 tr1.appendChild(th);
 
-                // match points
+                // Reef auto points
                 th = document.createElement("th");
                 th.textContent = "AutoReef";
-                th.title = "Total Autonomous Cargo for the whole Alliance";
+                th.title = "Total Autonomous Reef for the whole Alliance";
                 th.colSpan = 1;
                 tr1.appendChild(th);
 
                 // match points
                 th = document.createElement("th");
-                th.textContent = "TeleopReef";
+                th.textContent = "L4";
+                th.title = "Total Teleop Reef for the whole Alliance";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "L3";
+                th.title = "Total Teleop Reef for the whole Alliance";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "L2";
+                th.title = "Total Teleop Reef for the whole Alliance";
+                th.colSpan = 1;
+                tr1.appendChild(th);
+
+                // match points
+                th = document.createElement("th");
+                th.textContent = "L1";
                 th.title = "Total Teleop Reef for the whole Alliance";
                 th.colSpan = 1;
                 tr1.appendChild(th);
@@ -1223,7 +1244,10 @@
                 acc.cMatches = 0;
                 acc.sumRP = 0;
                 acc.sumAutoReef = 0;
-                acc.sumTeleopReef = 0;
+                acc.sumL4 = 0;
+                acc.sumL3 = 0;
+                acc.sumL2 = 0;
+                acc.sumL1 = 0;
                 acc.sumAlgaeProc = 0;
                 acc.sumAlgaeNet = 0;
                 acc.sumTaxi = 0;
@@ -1264,7 +1288,10 @@
                 // compute and report the scoring averages
                 tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumRP / cMatches).toFixed(2);
                 tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAutoReef / cMatches).toFixed(2);
-                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTeleopReef / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumL4 / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumL3 / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumL2 / cMatches).toFixed(2);
+                tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumL1 / cMatches).toFixed(2);
                 tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAlgaeProc / cMatches).toFixed(2);
                 tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumAlgaeNet / cMatches).toFixed(2);
                 tr.insertCell(-1).textContent = (cMatches == 0) ? "--" : (acc.sumTaxi / cMatches).toFixed(2);
@@ -1586,17 +1613,20 @@
                             6 * sb.autoReef.tba_midRow +
                             7 * sb.autoReef.tba_topRow;
 
-                        // this calculation looks wrong. Gives credit for Auto instead of losing it.
-                        var teleopReef =
-                            2 * Math.max(0, sb.teleopReef.trough - sb.autoReef.trough) +
-                            3 * Math.max(0, sb.teleopReef.tba_botRow - sb.autoReef.tba_botRow) +
-                            4 * Math.max(0, sb.teleopReef.tba_midRow - sb.autoReef.tba_midRow) +
-                            5 * Math.max(0, sb.teleopReef.tba_topRow - sb.autoReef.tba_topRow);
-
                         // alliance auto coral points
                         tr.insertCell(-1).textContent = autoReef;
+
+                        // this calculation looks wrong. Gives credit for Auto instead of losing it.
+                        var teleopL1 = 2 * Math.max(0, sb.teleopReef.trough - sb.autoReef.trough);
+                        var teleopL2 = 3 * Math.max(0, sb.teleopReef.tba_botRow - sb.autoReef.tba_botRow);
+                        var teleopL3 = 4 * Math.max(0, sb.teleopReef.tba_midRow - sb.autoReef.tba_midRow);
+                        var teleopL4 = 5 * Math.max(0, sb.teleopReef.tba_topRow - sb.autoReef.tba_topRow);
+
                         // alliance teleop
-                        tr.insertCell(-1).textContent = teleopReef;
+                        tr.insertCell(-1).textContent = teleopL4;
+                        tr.insertCell(-1).textContent = teleopL3;
+                        tr.insertCell(-1).textContent = teleopL2;
+                        tr.insertCell(-1).textContent = teleopL1;
 
                         // algae through processor
                         var algaeProc = sb.wallAlgaeCount;
@@ -1618,7 +1648,10 @@
 
                         // increment the coral totals for Auto and Teleop
                         acc.sumAutoReef += autoReef;
-                        acc.sumTeleopReef += teleopReef;
+                        acc.sumL4 += teleopL4;
+                        acc.sumL3 += teleopL3;
+                        acc.sumL2 += teleopL2;
+                        acc.sumL1 += teleopL1;
 
                         // increment algae
                         acc.sumAlgaeProc += 6 * algaeProc;
