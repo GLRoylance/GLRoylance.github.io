@@ -1709,14 +1709,16 @@
                 for (var j = 0; j < 2; j++) {
                     var a = as[j];
 
-                    var sb = m.score_breakdown[a];
-                    // var reason = tba.checkScoreBreakdown(sb);
-                    var reason = null;
+                    if (m.score_breakdown != null) {
+                        var sb = m.score_breakdown[a];
+                        // var reason = tba.checkScoreBreakdown(sb);
+                        var reason = null;
 
-                    if (reason != null) {
-                        // report the problem
-                        console.log("Inconsistent match: match %s, alliance %s, reason %s", m.key, a, reason);
-                        console.log(m);
+                        if (reason != null) {
+                            // report the problem
+                            console.log("Inconsistent match: match %s, alliance %s, reason %s", m.key, a, reason);
+                            console.log(m);
+                        }
                     }
                 }
             }
